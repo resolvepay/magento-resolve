@@ -1,0 +1,12 @@
+<style type="text/css">
+</style>
+<ul class="form-list resolve" id="payment_form_<?php echo $this->getMethodCode() ?>" style="display:none;">
+    <li class="form-alt">
+            <div class="resolve_payment_info">
+                <p><?php echo $this->__('You will be redirected to Resolve to securely complete your purchase.'); ?></p>
+            </div>
+    </li>
+</ul>
+<div>
+    <?php echo $this->getMethod()->getConfigData('message');?>
+</div>

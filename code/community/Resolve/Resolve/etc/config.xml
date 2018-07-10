@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Resolve_Resolve>
+            <version>1.0.0.0</version>
+        </Resolve_Resolve>
+    </modules>
+
+    <global>
+        <fieldsets>
+            <sales_convert_quote_payment>
+                <custom_field_one>
+                    <to_order_payment>*</to_order_payment>
+                </custom_field_one>
+                <custom_field_two>
+                    <to_order_payment>*</to_order_payment>
+                </custom_field_two>
+            </sales_convert_quote_payment>
+        </fieldsets>
+
+        <helpers>
+            <resolve>
+                <class>Resolve_Resolve_Helper</class>
+            </resolve>
+        </helpers>
+
+        <blocks>
+            <resolve>
+                <class>Resolve_Resolve_Block</class>
+            </resolve>
+        </blocks>
+
+        <models>
+            <resolve>
+                <class>Resolve_Resolve_Model</class>
+            </resolve>
+        </models>
+
+        <resources>
+            <resolve_setup>
+                <setup>
+                    <module>Resolve_Resolve</module>
+                </setup>
+            </resolve_setup>
+        </resources>
+
+        <!-- <events>
+            <resolve_action_saveorder>
+                <observers>
+                    <controller_action_postdispatch_resolve_payment_confirm>
+                        <type>singleton</type>
+                        <class>resolve/order_observer_afterSaveOrder</class>
+                        <method>postDispatchSaveOrder</method>
+                    </controller_action_postdispatch_resolve_payment_confirm>
+                </observers>
+            </resolve_action_saveorder>
+            <sales_quote_config_get_product_attributes>
+                <observers>
+                    <resolve>
+                        <class>resolve/rule_observer</class>
+                        <method>addProductAttributes</method>
+                    </resolve>
+                </observers>
+            </sales_quote_config_get_product_attributes>
+        </events> -->
+
+    </global>
+
+    <default>
+        <payment>
+
+            <resolve>
+                <active>1</active>
+                <model>resolve/paymentmethod</model>
+                <order_status>pending</order_status>
+                <title>Resolve</title>
+                <allowspecific>0</allowspecific>
+                <!-- <payment_action>sale</payment_action> -->
+                <group>online</group>
+                <account_mode>sandbox</account_mode>
+                <pre_order>1</pre_order>
+                <label_html_custom>test</label_html_custom>
+                <checkout_button_active>0</checkout_button_active>
+                <checkout_button_code>test</checkout_button_code>
+                <payment_action>authorize</payment_action>
+                <api_key_sandbox />
+                <secret_key_sandbox backend_model="adminhtml/system_config_backend_encrypted"/>
+                <api_key_production />
+                <secret_key_production backend_model="adminhtml/system_config_backend_encrypted"/>
+                <line_items_enabled>1</line_items_enabled>
+                <visible_on_cart>1</visible_on_cart>
+                <visible_on_product>1</visible_on_product>
+                <currency>USD</currency>
+                <min_order_total>0.01</min_order_total>
+                <max_order_total>50000</max_order_total>
+                <disable_for_backordered_items>0</disable_for_backordered_items>
+                <plain_text_title_enabled>0</plain_text_title_enabled>
+                <allowspecific>1</allowspecific>
+                <specificcountry>US</specificcountry>
+            </resolve>
+        </payment>
+    </default>
+
+    <frontend>
+        <!-- <events>
+            <controller_action_predispatch_onestepcheckout_checkout_saveOrder>
+                <observers>
+                    <resolve_resolve_model_order_observer>
+                        <type>singleton</type>
+                        <class>resolve/order_observer</class>
+                        <method>preDispatchSaveOrderAction</method>
+                    </resolve_resolve_model_order_observer>
+                </observers>
+            </controller_action_predispatch_onestepcheckout_checkout_saveOrder>
+            <controller_action_predispatch_checkout_onepage_saveOrder>
+                <observers>
+                    <resolve_resolve_model_order_observer>
+                        <type>singleton</type>
+                        <class>resolve/order_observer</class>
+                        <method>preDispatchSaveOrderAction</method>
+                    </resolve_resolve_model_order_observer>
+                </observers>
+            </controller_action_predispatch_checkout_onepage_saveOrder>
+
+            <checkout_type_onepage_save_order>
+                <observers>
+                    <resolve_resolve_model_pre_order_observer>
+                        <type>singleton</type>
+                        <class>resolve/order_observer</class>
+                        <method>preOrder</method>
+                    </resolve_resolve_model_pre_order_observer>
+                </observers>
+            </checkout_type_onepage_save_order>
+            <controller_action_layout_generate_xml_before>
+                <observers>
+                    <resolve_resolvepromo>
+                        <type>singleton</type>
+                        <class>resolve/promo_observer</class>
+                        <method>layoutGenerateBlocksBefore</method>
+                    </resolve_resolvepromo>
+                </observers>
+            </controller_action_layout_generate_xml_before>
+            <controller_action_postdispatch_checkout_onepage_saveBilling>
+                <observers>
+                    <resolve_checkoutbutton_proceed>
+                        <type>singleton</type>
+                        <class>resolve/order_observer_applyResolvePaymentMethod</class>
+                        <method>execute</method>
+                    </resolve_checkoutbutton_proceed>
+                </observers>
+            </controller_action_postdispatch_checkout_onepage_saveBilling>
+            <checkout_type_onepage_save_order_after>
+                <observers>
+                    <resolve_resolve_model_order_observer>
+                        <type>singleton</type>
+                        <class>resolve/order_observer</class>
+                        <method>reactivateQuote</method>
+                    </resolve_resolve_model_order_observer>
+                </observers>
+            </checkout_type_onepage_save_order_after>
+            <controller_action_postdispatch>
+                <observers>
+                    <controller_action_postdispatch_resolve_all>
+                        <type>singleton</type>
+                        <class>resolve/order_observer</class>
+                        <method>postDispatchAll</method>
+                    </controller_action_postdispatch_resolve_all>
+                </observers>
+            </controller_action_postdispatch>
+            <controller_action_predispatch>
+                <observers>
+                    <controller_action_predispatch_resolve_mfp_identify>
+                        <type>singleton</type>
+                        <class>resolve/order_observer_mfp_identify</class>
+                        <method>execute</method>
+                    </controller_action_predispatch_resolve_mfp_identify>
+                </observers>
+            </controller_action_predispatch>
+            <customer_login>
+                <observers>
+                    <resolve_resolve_mfp_detection_customer_login>
+                        <type>singleton</type>
+                        <class>resolve/order_observer_mfp_updateOnCustomerLogin</class>
+                        <method>execute</method>
+                    </resolve_resolve_mfp_detection_customer_login>
+                </observers>
+            </customer_login>
+        </events> -->
+        <layout>
+            <updates>
+                <resolve>
+                    <file>resolve/resolve.xml</file>
+                </resolve>
+            </updates>
+        </layout>
+        <routers>
+            <resolve>
+                <use>standard</use>
+                <args>
+                    <module>Resolve_Resolve</module>
+                    <frontName>resolve</frontName>
+                </args>
+            </resolve>
+        </routers>
+    </frontend>
+</config>
