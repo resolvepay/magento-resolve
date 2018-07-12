@@ -185,7 +185,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </detect_xhr_checkout> -->
-                        <pre_order translate="label">
+                        <!-- <pre_order translate="label">
                             <comment>Only applicable with Redirect checkout flow type. Enable for an improved order management experience. Disable if there are
                                 compatibility issues.
                             </comment>
@@ -196,7 +196,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                        </pre_order>
+                        </pre_order> -->
                     </fields>
                 </resolve>
             </groups>

@@ -5,9 +5,12 @@
 <?php
 $checkoutSession = Mage::getSingleton('checkout/session');
 $quote = $checkoutSession->getQuote();
+// var_dump($quote->getData());
+// var_dump($checkoutSession);
 $paymentMethod = $quote->getPayment()->getMethodInstance();
 ?>
 <script type="text/javascript">
+    //<![CDATA[
     Review.prototype.save = function() {
         if (checkout.loadWaiting!=false) return;
 
@@ -23,8 +26,56 @@ $paymentMethod = $quote->getPayment()->getMethodInstance();
         }
 
         checkout.setLoadWaiting('review');
-        
-        window.location.href='<?=Mage::getBaseUrl()?>resolve/payment/redirect/';
+
+        // window.location.href='<?=Mage::getBaseUrl()?>resolve/payment/redirect/';
+        window.location.href='<?=Mage::getBaseUrl()?>resolve/payment/renderPreOrder/';
     }
- 
+    //   
+
+    //     var params = Form.serialize(payment.form);
+    //     if (this.agreementsForm) {
+    //         params += '&'+Form.serialize(this.agreementsForm);
+    //     }
+    //     var paymentMethod = payment.currentMethod;
+    //     params.save = true;
+    //     var request = new Ajax.Request(
+    //         this.saveUrl,
+    //         {
+    //             method:'post',
+    //             parameters:params,
+    //             onComplete: function(transport) {
+    //                 if (transport && transport.responseText) {
+    //                     try{
+    //                         response = eval('(' + transport.responseText + ')');
+    //                     }
+    //                     catch (e) {
+    //                         response = {};
+    //                     }
+    //                     if (response.error_messages) {
+    //                         checkout.setLoadWaiting(false);
+    //                     }
+    //                 }
+    //             },
+    //             onSuccess: function(response){
+    //                 affirm.checkout(<?php echo json_encode($paymentMethod->getCheckoutQuoteObject($quote)); ?>);
+    //                 affirm.ui.error.on("close", function () {
+    //                     window.location = "<?php echo $this->helper('checkout/url')->getCheckoutUrl(); ?> ";
+    //                 });
+    //                 affirm.checkout.open({
+    //                     onFail: function () {
+    //                         checkout.setLoadWaiting(false);
+    //                         console.log("User cancelled the Affirm checkout flow")
+    //                     },
+    //                     onSucces: function (a) {
+    //                         checkout.setLoadWaiting(false);
+    //                         console.log("Affirm checkout successful");
+    //                     }
+    //                 });
+    //                 this.onSave;
+    //             },
+    //             onFailure: checkout.ajaxFailure.bind(checkout)
+    //         }
+    //     );
+    // }
+    //]]>
 </script>

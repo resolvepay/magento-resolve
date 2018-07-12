@@ -590,7 +590,7 @@ class Resolve_Resolve_Helper_Mfp extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Get affirm MFP value
+     * Get resolve MFP value
      *
      * @param array $productItemsMFP
      * @param array $categoryItemsIds

@@ -1,10 +1,17 @@
 <?php
     /** @var Resolve_Resolve_Block_Payment_Redirect $this **/
-    $order = Mage::getSingleton('checkout/session')->getQuote();
-    $paymentMethod = $order->getPayment()->getMethodInstance();
+		$order = Mage::getSingleton('checkout/session')->getQuote();
+		// var_dump(Mage::getSingleton('checkout/session')->getQuote()->getData());
+		// die();
+		// echo Mage::getModel("sales/order")->getCollection()->getLastItem()->getIncrementId();
+		$paymentMethod = $order->getPayment()->getMethodInstance();
+
+		// print_r(($paymentMethod->getCheckoutObject($order)));
+		// die();
+		// Mage::log(Mage::getModel('sales/order')->loadByIncrementId('100000286')->getData(), null, 'orderDataLog.log');
 ?>
 <html>
-    <body>
+  	<body>
         <script type="text/javascript" src="<?= Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN)?>frontend/base/default/js/resolve/resolve.js"></script>
         <div class="notice-label">Please wait, we are collecting order data</div>
         <div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
@@ -92,6 +99,8 @@
         </style>
         <script type="text/javascript">
             window.resolve.checkout(<?php echo json_encode($paymentMethod->getCheckoutObject($order))?>);
+            // affirm.ui.error.on("close", function(){ window.location= "<?php echo $this->helper('checkout/url')->getCheckoutUrl(); ?> ";});
+            // affirm.checkout.post();
         </script>
-    </body>
+  	</body>
 </html>

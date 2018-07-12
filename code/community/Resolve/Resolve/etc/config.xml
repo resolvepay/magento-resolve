@@ -23,7 +23,6 @@
                 <class>Resolve_Resolve_Helper</class>
             </resolve>
         </helpers>
-
         <blocks>
             <resolve>
                 <class>Resolve_Resolve_Block</class>
@@ -43,39 +42,38 @@
                 </setup>
             </resolve_setup>
         </resources>
-
         <!-- <events>
-            <resolve_action_saveorder>
-                <observers>
-                    <controller_action_postdispatch_resolve_payment_confirm>
-                        <type>singleton</type>
-                        <class>resolve/order_observer_afterSaveOrder</class>
-                        <method>postDispatchSaveOrder</method>
-                    </controller_action_postdispatch_resolve_payment_confirm>
-                </observers>
-            </resolve_action_saveorder>
-            <sales_quote_config_get_product_attributes>
+            <sales_order_save_after>
                 <observers>
                     <resolve>
-                        <class>resolve/rule_observer</class>
-                        <method>addProductAttributes</method>
+                        <class>resolve/observer</class>
+                        <method>exportOrder</method>
                     </resolve>
                 </observers>
-            </sales_quote_config_get_product_attributes>
+            </sales_order_save_after>
         </events> -->
 
     </global>
-
+    <!-- <adminhtml>
+        <sales_order_save_after>
+            <observers>
+                <watchorderstatus>
+                    <type>singleton</type>
+                    <class>resolve/observer</class>
+                    <method>checkCancelled</method>
+                </watchorderstatus>
+            </observers>
+        </sales_order_save_after>
+    </events> 
+  </adminhtml> -->
     <default>
         <payment>
-
             <resolve>
                 <active>1</active>
                 <model>resolve/paymentmethod</model>
                 <order_status>pending</order_status>
                 <title>Resolve</title>
                 <allowspecific>0</allowspecific>
-                <!-- <payment_action>sale</payment_action> -->
                 <group>online</group>
                 <account_mode>sandbox</account_mode>
                 <pre_order>1</pre_order>
@@ -102,90 +100,6 @@
     </default>
 
     <frontend>
-        <!-- <events>
-            <controller_action_predispatch_onestepcheckout_checkout_saveOrder>
-                <observers>
-                    <resolve_resolve_model_order_observer>
-                        <type>singleton</type>
-                        <class>resolve/order_observer</class>
-                        <method>preDispatchSaveOrderAction</method>
-                    </resolve_resolve_model_order_observer>
-                </observers>
-            </controller_action_predispatch_onestepcheckout_checkout_saveOrder>
-            <controller_action_predispatch_checkout_onepage_saveOrder>
-                <observers>
-                    <resolve_resolve_model_order_observer>
-                        <type>singleton</type>
-                        <class>resolve/order_observer</class>
-                        <method>preDispatchSaveOrderAction</method>
-                    </resolve_resolve_model_order_observer>
-                </observers>
-            </controller_action_predispatch_checkout_onepage_saveOrder>
-
-            <checkout_type_onepage_save_order>
-                <observers>
-                    <resolve_resolve_model_pre_order_observer>
-                        <type>singleton</type>
-                        <class>resolve/order_observer</class>
-                        <method>preOrder</method>
-                    </resolve_resolve_model_pre_order_observer>
-                </observers>
-            </checkout_type_onepage_save_order>
-            <controller_action_layout_generate_xml_before>
-                <observers>
-                    <resolve_resolvepromo>
-                        <type>singleton</type>
-                        <class>resolve/promo_observer</class>
-                        <method>layoutGenerateBlocksBefore</method>
-                    </resolve_resolvepromo>
-                </observers>
-            </controller_action_layout_generate_xml_before>
-            <controller_action_postdispatch_checkout_onepage_saveBilling>
-                <observers>
-                    <resolve_checkoutbutton_proceed>
-                        <type>singleton</type>
-                        <class>resolve/order_observer_applyResolvePaymentMethod</class>
-                        <method>execute</method>
-                    </resolve_checkoutbutton_proceed>
-                </observers>
-            </controller_action_postdispatch_checkout_onepage_saveBilling>
-            <checkout_type_onepage_save_order_after>
-                <observers>
-                    <resolve_resolve_model_order_observer>
-                        <type>singleton</type>
-                        <class>resolve/order_observer</class>
-                        <method>reactivateQuote</method>
-                    </resolve_resolve_model_order_observer>
-                </observers>
-            </checkout_type_onepage_save_order_after>
-            <controller_action_postdispatch>
-                <observers>
-                    <controller_action_postdispatch_resolve_all>
-                        <type>singleton</type>
-                        <class>resolve/order_observer</class>
-                        <method>postDispatchAll</method>
-                    </controller_action_postdispatch_resolve_all>
-                </observers>
-            </controller_action_postdispatch>
-            <controller_action_predispatch>
-                <observers>
-                    <controller_action_predispatch_resolve_mfp_identify>
-                        <type>singleton</type>
-                        <class>resolve/order_observer_mfp_identify</class>
-                        <method>execute</method>
-                    </controller_action_predispatch_resolve_mfp_identify>
-                </observers>
-            </controller_action_predispatch>
-            <customer_login>
-                <observers>
-                    <resolve_resolve_mfp_detection_customer_login>
-                        <type>singleton</type>
-                        <class>resolve/order_observer_mfp_updateOnCustomerLogin</class>
-                        <method>execute</method>
-                    </resolve_resolve_mfp_detection_customer_login>
-                </observers>
-            </customer_login>
-        </events> -->
         <layout>
             <updates>
                 <resolve>

@@ -154,32 +154,16 @@ class Resolve_Resolve_Model_Paymentmethod extends Mage_Payment_Model_Method_Abst
      * @return string
      * @throws Resolve_Resolve_Exception
      */
-    protected function _apiRequest($method, $path, $data = null, $storeId = null, $resourcePath = self::API_CHARGES_PATH, $chargeId='qweqweqw')
+    protected function _apiRequest($method, $path, $data = null, $storeId = null, $resourcePath = self::API_CHARGES_PATH, $chargeId)
     {
-        var_dump(array(
-            'fee' => '768',
-            'created' => '2018-07-07T09:29:23Z',
-            'currency' => 'USD',
-            'amount' => '25600',
-            'type' => 'capture',
-            'id' => $chargeId,
-            'transaction_id' => 'gqWNsgVFEhcqqGVH'
-        ));
-        return array(
-            'fee' => '768',
-            'created' => '2018-07-07T09:29:23Z',
-            'currency' => 'USD',
-            'amount' => '25600',
-            'type' => 'capture',
-            'id' => $chargeId,
-            'transaction_id' => 'gqWNsgVFEhcqqGVH'
-        );
-       
-        $url = trim($this->getBaseApiUrl(), '/') . $resourcePath . $path;
-        $url = 'https://app-sandbox.paywithresolve.com/api/charges/rJcFD4Rz7';
-        // $url = 'https://f1c98eca.ngrok.io/api/charges/rysRICg7Q';
-        $client = new Zend_Http_Client($url);
+
+        $url = 'https://app-sandbox.paywithresolve.com/api' . $path;
+
+        $client = new Zend_Http_Client($url, array(
+            'maxredirects' => 0,
+            'timeout'      => 30));
         if ($method == Zend_Http_Client::POST && $data) {
+            // $client->setEncType('application/x-www-form-urlencoded');
             $json = json_encode($data);
             $client->setRawData($json, 'application/json');
         }
@@ -188,13 +172,17 @@ class Resolve_Resolve_Model_Paymentmethod extends Mage_Payment_Model_Method_Abst
         $client->setAuth(Mage::helper($helperClass)->getApiKey($storeId),
             Mage::helper($helperClass)->getSecretKey($storeId), Zend_Http_Client::AUTH_BASIC
         );
-        // $client->setHeaders(array(
-        //     'Content-Type:application/json; charset:utf-8',
-        //     'Connection:keep-alive',
-        //     'Content-Encoding:gzip'));
-        // $client->setAuth('test','4S2ThdKn5idMmHwIZ5TOUXcz0JdAizhA', Zend_Http_Client::AUTH_BASIC);
-        $rawResult = $client->request(Zend_Http_Client::GET)->getRawBody();
-        Mage::log($client, null, 'resolveData.log');
+        if($method == Zend_Http_Client::PUT && $data){
+            $json = json_encode($data);
+            $client->setRawData($json, 'application/json')->request('PUT');
+        }
+        else{
+
+            $rawResult = $client->request($method)->getRawBody();
+
+        }
+        
+        // die(var_dump($client));
         try {
             $retJson = Zend_Json::decode($rawResult, Zend_Json::TYPE_ARRAY);
         } catch (Zend_Json_Exception $e) {
@@ -206,7 +194,7 @@ class Resolve_Resolve_Model_Paymentmethod extends Mage_Payment_Model_Method_Abst
                 $retJson['status_code'] . ' error: '. $retJson['message']));
         }
         
-        Mage::log($client, null, 'resolveData.log');
+        Mage::log($retJson, null, 'resolveData.log');
         return $retJson;
     }
 
@@ -241,11 +229,11 @@ class Resolve_Resolve_Model_Paymentmethod extends Mage_Payment_Model_Method_Abst
      */
     protected function _setChargeResult($result)
     {
-        if (isset($result['id'])) {
-            $this->setChargeId($result['id']);
-        } else {
-            throw new Resolve_Resolve_Exception(Mage::helper('resolve')->__('Resolve charge id not returned from call.'));
-        }
+        // if (isset($result['id'])) {
+            $this->setChargeId($result);
+        // } else {
+        //     throw new Resolve_Resolve_Exception(Mage::helper('resolve')->__('Resolve charge id not returned from call.'));
+        // }
     }
 
     /**
@@ -274,12 +262,15 @@ class Resolve_Resolve_Model_Paymentmethod extends Mage_Payment_Model_Method_Abst
      * @return $this|Mage_Payment_Model_Abstract
      * @throws Resolve_Resolve_Exception
      */
-    public function capture(Varien_Object $payment, $amount)
+    public function capture(Varien_Object $payment, $amount, $chargeId)
     {
+        
         if ($amount <= 0) {
             throw new Resolve_Resolve_Exception(Mage::helper('resolve')->__('Invalid amount for capture.'));
         }
         $chargeId = $this->getChargeId();
+        echo $chargeId.'----capture</br>';
+        // $chargeId = 'BJdbEgMQQ';
         $amountCents = Mage::helper('resolve/util')->formatCents($amount);
         if (!$chargeId) {
             if ($this->getCheckoutToken()) {
@@ -300,7 +291,9 @@ class Resolve_Resolve_Model_Paymentmethod extends Mage_Payment_Model_Method_Abst
         if (!$storeId) {
             $storeId = null;
         }
-        $result = $this->_apiRequest(Varien_Http_Client::POST, "/charges/{$chargeId}/capture", null, $storeId);
+        Mage::log('capture', null, '__capture___.log');
+        // $result = $this->_apiRequest(Varien_Http_Client::POST, "/charges/{$chargeId}/capture", null, $storeId);
+        $result = $this->_apiRequest(Varien_Http_Client::POST, "/charges/{$chargeId}/capture", null, $storeId, $chargeId);
         $this->_validateAmountResult($amountCents, $result['amount']);
         $payment->setIsTransactionClosed(0);
         return $this;
@@ -348,8 +341,13 @@ class Resolve_Resolve_Model_Paymentmethod extends Mage_Payment_Model_Method_Abst
         if (!$storeId) {
             $storeId = null;
         }
-        $result = $this->_apiRequest(Varien_Http_Client::POST, "{$chargeId}/refund", array(
-                'amount' => $amountCents), $storeId
+        // router.post('/refunds', auth, createRefund);
+        // $result = $this->_apiRequest(Varien_Http_Client::POST, "{$chargeId}/refund", array(
+        //         'amount' => $amountCents), $storeId
+        // );
+
+        $result = $this->_apiRequest(Varien_Http_Client::POST, "/refunds", 
+            array('amount' => $amountCents, 'charge_id' => $chargeId), $storeId
         );
 
         $this->_validateAmountResult($amountCents, $result['amount']);
@@ -372,6 +370,7 @@ class Resolve_Resolve_Model_Paymentmethod extends Mage_Payment_Model_Method_Abst
      */
     public function void(Varien_Object $payment)
     {
+        Mage::log('void', null, 'void.log');
         if (!$this->canVoid($payment)) {
             throw new Resolve_Resolve_Exception(Mage::helper('payment')->__('Void action is not available.'));
         }
@@ -390,7 +389,7 @@ class Resolve_Resolve_Model_Paymentmethod extends Mage_Payment_Model_Method_Abst
         if (!$storeId) {
             $storeId = null;
         }
-        $result = $this->_apiRequest(Varien_Http_Client::POST, "{$chargeId}/void", null, $storeId);
+        $result = $this->_apiRequest(Varien_Http_Client::POST, "/charges/{$chargeId}/cancel", null, $storeId);
         return $this;
     }
 
@@ -403,6 +402,7 @@ class Resolve_Resolve_Model_Paymentmethod extends Mage_Payment_Model_Method_Abst
      */
     public function cancel(Varien_Object $payment)
     {
+        Mage::log('cancel', null, 'cancel.log');
         if ($payment->canVoid($payment)) {
             $this->void($payment);
         };
@@ -417,12 +417,15 @@ class Resolve_Resolve_Model_Paymentmethod extends Mage_Payment_Model_Method_Abst
      * @return $this|Mage_Payment_Model_Abstract
      * @throws Resolve_Resolve_Exception
      */
-    public function authorize(Varien_Object $payment, $amount)
+    public function authorize(Varien_Object $payment, $amount, $chargeId)
     {
+
+        echo $chargeId.'----authorize</br>';
+        // echo $this->getChargeId();
         if ($amount <= 0) {
             throw new Resolve_Resolve_Exception(Mage::helper('resolve')->__('Invalid amount for authorization.'));
         }
-
+        echo $chargeId;
         $amountCents = Mage::helper('resolve/util')->formatCents($amount);
         $token = $payment->getAdditionalInformation(self::CHECKOUT_TOKEN);
         $amountToAuthorize = $this->_getCheckoutTotalFromToken($token);
@@ -434,11 +437,11 @@ class Resolve_Resolve_Model_Paymentmethod extends Mage_Payment_Model_Method_Abst
         if (!$storeId) {
             $storeId = null;
         }
-        $result = $this->_apiRequest(Varien_Http_Client::POST, '', array(
-                self::CHECKOUT_TOKEN => $token), $storeId, chargeId
-        );
+        // $result = $this->_apiRequest(Varien_Http_Client::POST, '', array(
+        //         self::CHECKOUT_TOKEN => $token), $storeId, null, $chargeId
+        // );
 
-        $this->_setChargeResult($result);
+        // $this->_setChargeResult($result);
         $payment->setTransactionId($this->getChargeId())->setIsTransactionClosed(0);
         return $this;
     }
@@ -478,20 +481,25 @@ class Resolve_Resolve_Model_Paymentmethod extends Mage_Payment_Model_Method_Abst
     public function processConfirmOrder($order, $checkoutToken, $chargeId)
     {
         $payment = $order->getPayment();
-
         $payment->setAdditionalInformation(self::CHECKOUT_TOKEN, $checkoutToken);
         $payment->setAdditionalInformation('resolve_telesales', false);
         $action = $this->getConfigData('payment_action');
-
+        $this->_apiRequest("PUT", "/charges/{$chargeId}", array(
+        'po_number'=>$order->getIncrementId(),'order_number'=>$order->getIncrementId()), $storeId
+    );
+    // echo 'Put-param ' . $key . ' = ' . $value . PHP_EOL;
+        echo $chargeId . '--processConfirmOrder</br>';
         //authorize the total amount.
-        $payment->authorize(true, self::_resolveTotal($order), $chargeId);
+        $this->_setChargeResult($chargeId);
+        $payment->authorize(true, self::_resolveTotal($order), 123123);
         $payment->setAmountAuthorized(self::_resolveTotal($order));
         $order->save();
+       
         //can capture as well..
         if ($action == self::ACTION_AUTHORIZE_CAPTURE) {
             $payment->setAmountAuthorized(self::_resolveTotal($order));
             $payment->setBaseAmountAuthorized($order->getBaseTotalDue());
-            $payment->capture(null);
+            $payment->capture(null, chargeId);
             $order->save();
         }
     }
@@ -634,9 +642,9 @@ class Resolve_Resolve_Model_Paymentmethod extends Mage_Payment_Model_Method_Abst
             // 'shipping_type' => $order->getShippingAddress()->getShippingMethod(),
             'tax_amount' => Mage::helper('resolve/util')->formatCents($order->getShippingAddress()->getTaxAmount()),
             'customer_key' => md5(`123xyz:4S2ThdKn5idMmHwIZ5TOUXcz0JdAizhA`),
-            'purchase_order_id' => 'PO54321',
+            'purchase_order_id' => $order->getReservedOrderId(),
             'order_id' => $order->getReservedOrderId(),
-            'po_number' => '857-444-3235',
+            'po_number' => $order->getReservedOrderId(),
             // 'merchant' => array(
             //     'public_api_key' => Mage::helper('resolve')->getApiKey(),
             //     'user_confirmation_url' => Mage::getUrl('resolve/payment/confirm', array('_secure' => true)),
