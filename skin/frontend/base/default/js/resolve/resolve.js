@@ -130,7 +130,7 @@
       },
       getHost: function getHost(data) {
         var env = 'production';
-        if (data.sandbox) {
+        if (data.sandbox === true) {
           env = 'sandbox';
         } else if (data.development) {
           env = 'development';

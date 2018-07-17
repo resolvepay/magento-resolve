@@ -1,0 +1,20 @@
+{
+    "name": "resolve/resolve",
+    "type": "magento-module",
+    "description": "Rseolve Payment module",
+    "version": "1.0.0.0",
+    "keywords":["magento","mvc"],
+    "homepage":"https://github.com/resolve/resolve",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "resolve",
+            "email": "help@paywithresolve.com",
+            "homepage": "resolve",
+            "role": "developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.2.0"
+    }
+}

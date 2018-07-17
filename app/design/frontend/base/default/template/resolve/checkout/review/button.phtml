@@ -1,0 +1,29 @@
+<button id="resolve-submit" onClick="review.save()" type="submit" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Continue with Resolve')) ?>" class="button btn-checkout" >
+    <span><span><?php echo $this->__('Continue with Resolve') ?></span></span>
+</button>
+
+<?php
+$checkoutSession = Mage::getSingleton('checkout/session');
+$quote = $checkoutSession->getQuote();
+$paymentMethod = $quote->getPayment()->getMethodInstance();
+?>
+<script type="text/javascript">
+    Review.prototype.save = function() {
+        if (checkout.loadWaiting!=false) return;
+
+        if ($('checkout-agreements')) {
+            var checkboxes = $$('#checkout-agreements input');
+            for (var i=0, l=checkboxes.length; i<l; i++) {
+                if (!checkboxes[i].checked) {
+                    checkout.setLoadWaiting(false);
+                    alert("<?php echo $this->jsQuoteEscape($this->__('Please agree to all Terms and Conditions before placing the orders.')) ?>");
+                    return false;
+                }
+            }
+        }
+
+        checkout.setLoadWaiting('review');
+
+        window.location.href='<?=Mage::getBaseUrl()?>resolve/payment/renderPreOrder/';
+    } 
+</script>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<layout>
+    <default>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/resolve/resolve.js</name>
+            </action>
+        </reference>
+    </default>
+    <checkout_onepage_review>
+        <reference name="checkout.onepage.review.button">
+            <action method="setTemplate">
+                <template helper="resolve/getReviewButtonTemplate">
+                    <name>resolve/checkout/review/button.phtml</name>
+                    <block>checkout.onepage.review.button</block>
+                </template>
+            </action>
+        </reference>
+    </checkout_onepage_review>
+  
+</layout>
