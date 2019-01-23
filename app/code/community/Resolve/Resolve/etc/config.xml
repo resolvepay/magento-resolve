@@ -1,52 +1,178 @@
 <?xml version="1.0"?>
+<!--
+  ~ /*
+  ~  * BSD 3-Clause License
+  ~  *
+  ~  * Copyright (c) 2018, Resolve
+  ~  * All rights reserved.
+  ~  *
+  ~  * Redistribution and use in source and binary forms, with or without
+  ~  * modification, are permitted provided that the following conditions are met:
+  ~  *
+  ~  *  Redistributions of source code must retain the above copyright notice, this
+  ~  *   list of conditions and the following disclaimer.
+  ~  *
+  ~  *  Redistributions in binary form must reproduce the above copyright notice,
+  ~  *   this list of conditions and the following disclaimer in the documentation
+  ~  *   and/or other materials provided with the distribution.
+  ~  *
+  ~  *  Neither the name of the copyright holder nor the names of its
+  ~  *   contributors may be used to endorse or promote products derived from
+  ~  *   this software without specific prior written permission.
+  ~  *
+  ~  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  ~  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  ~  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  ~  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+  ~  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  ~  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  ~  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  ~  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  ~  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  ~  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  ~  */
+  -->
+
 <config>
     <modules>
         <Resolve_Resolve>
-            <version>1.0.0.0</version>
+            <version>3.6.3</version>
         </Resolve_Resolve>
     </modules>
-
     <global>
-        <fieldsets>
-            <sales_convert_quote_payment>
-                <custom_field_one>
-                    <to_order_payment>*</to_order_payment>
-                </custom_field_one>
-                <custom_field_two>
-                    <to_order_payment>*</to_order_payment>
-                </custom_field_two>
-            </sales_convert_quote_payment>
-        </fieldsets>
-
-        <helpers>
-            <resolve>
-                <class>Resolve_Resolve_Helper</class>
-            </resolve>
-        </helpers>
         <blocks>
             <resolve>
                 <class>Resolve_Resolve_Block</class>
             </resolve>
+            <catalog>
+                <rewrite>
+                    <product_list>Resolve_Resolve_Block_Product_List</product_list>
+                </rewrite>
+            </catalog>
         </blocks>
-
+        <helpers>
+            <resolve>
+                <class>Resolve_Resolve_Helper</class>
+            </resolve>
+            <payment>
+                <rewrite>
+                    <data>Resolve_Resolve_Helper_Payment_Data</data>
+                </rewrite>
+            </payment>
+        </helpers>
         <models>
             <resolve>
                 <class>Resolve_Resolve_Model</class>
+                <resourceModel>resolve_mysql4</resourceModel>
             </resolve>
+            <resolve_mysql4>
+                <class>Resolve_Resolve_Model_Mysql4</class>
+                <entities>
+                    <rule>
+                        <table>resolve_payrestriction_rule</table>
+                    </rule>
+                    <attribute>
+                        <table>resolve_payrestriction_attribute</table>
+                    </attribute>
+                </entities>
+            </resolve_mysql4>
         </models>
-
         <resources>
             <resolve_setup>
                 <setup>
                     <module>Resolve_Resolve</module>
                 </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
             </resolve_setup>
+            <resolve_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </resolve_write>
+            <resolve_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </resolve_read>
         </resources>
-
+        <events>
+            <resolve_action_saveorder>
+                <observers>
+                    <controller_action_postdispatch_resolve_payment_confirm>
+                        <type>singleton</type>
+                        <class>resolve/order_observer_afterSaveOrder</class>
+                        <method>postDispatchSaveOrder</method>
+                    </controller_action_postdispatch_resolve_payment_confirm>
+                </observers>
+            </resolve_action_saveorder>
+            <sales_quote_config_get_product_attributes>
+                <observers>
+                    <resolve>
+                        <class>resolve/rule_observer</class>
+                        <method>addProductAttributes</method>
+                    </resolve>
+                </observers>
+            </sales_quote_config_get_product_attributes>
+        </events>
     </global>
-
     <frontend>
         <events>
+            <controller_action_predispatch_onestepcheckout_checkout_saveOrder>
+                <observers>
+                    <resolve_resolve_model_order_observer>
+                        <type>singleton</type>
+                        <class>resolve/order_observer</class>
+                        <method>preDispatchSaveOrderAction</method>
+                    </resolve_resolve_model_order_observer>
+                </observers>
+            </controller_action_predispatch_onestepcheckout_checkout_saveOrder>
+            <controller_action_predispatch_checkout_onepage_saveOrder>
+                <observers>
+                    <resolve_resolve_model_order_observer>
+                        <type>singleton</type>
+                        <class>resolve/order_observer</class>
+                        <method>preDispatchSaveOrderAction</method>
+                    </resolve_resolve_model_order_observer>
+                </observers>
+            </controller_action_predispatch_checkout_onepage_saveOrder>
+            <controller_action_predispatch_onestepcheckout_index_saveOrder><!-- Added for MW Onestepcheckout -->
+                <observers>
+                    <resolve_resolve_model_order_observer>
+                        <type>singleton</type>
+                        <class>resolve/order_observer</class>
+                        <method>preDispatchSaveOrderAction</method>
+                    </resolve_resolve_model_order_observer>
+                </observers>
+            </controller_action_predispatch_onestepcheckout_index_saveOrder>
+            <controller_action_predispatch_iwd_opc_json_saveOrder><!-- Added for IWD OPC -->
+                <observers>
+                    <resolve_resolve_model_order_observer>
+                        <type>singleton</type>
+                        <class>resolve/order_observer</class>
+                        <method>preDispatchSaveOrderAction</method>
+                    </resolve_resolve_model_order_observer>
+                </observers>
+            </controller_action_predispatch_iwd_opc_json_saveOrder>
+            <checkout_type_onepage_save_order>
+                <observers>
+                    <resolve_resolve_model_pre_order_observer>
+                        <type>singleton</type>
+                        <class>resolve/order_observer</class>
+                        <method>preOrder</method>
+                    </resolve_resolve_model_pre_order_observer>
+                </observers>
+            </checkout_type_onepage_save_order>
+            <controller_action_layout_generate_xml_before>
+                <observers>
+                    <resolve_resolvepromo>
+                        <type>singleton</type>
+                        <class>resolve/promo_observer</class>
+                        <method>layoutGenerateBlocksBefore</method>
+                    </resolve_resolvepromo>
+                </observers>
+            </controller_action_layout_generate_xml_before>
             <controller_action_postdispatch_checkout_onepage_saveBilling>
                 <observers>
                     <resolve_checkoutbutton_proceed>
@@ -56,43 +182,59 @@
                     </resolve_checkoutbutton_proceed>
                 </observers>
             </controller_action_postdispatch_checkout_onepage_saveBilling>
+            <checkout_type_onepage_save_order_after>
+                <observers>
+                    <resolve_resolve_model_order_observer>
+                        <type>singleton</type>
+                        <class>resolve/order_observer</class>
+                        <method>reactivateQuote</method>
+                    </resolve_resolve_model_order_observer>
+                </observers>
+            </checkout_type_onepage_save_order_after>
+            <controller_action_postdispatch>
+                <observers>
+                    <controller_action_postdispatch_resolve_all>
+                        <type>singleton</type>
+                        <class>resolve/order_observer</class>
+                        <method>postDispatchAll</method>
+                    </controller_action_postdispatch_resolve_all>
+                </observers>
+            </controller_action_postdispatch>
+            <controller_action_predispatch>
+                <observers>
+                    <controller_action_predispatch_resolve_mfp_identify>
+                        <type>singleton</type>
+                        <class>resolve/order_observer_mfp_identify</class>
+                        <method>execute</method>
+                    </controller_action_predispatch_resolve_mfp_identify>
+                </observers>
+            </controller_action_predispatch>
+            <customer_login>
+                <observers>
+                    <resolve_resolve_mfp_detection_customer_login>
+                        <type>singleton</type>
+                        <class>resolve/order_observer_mfp_updateOnCustomerLogin</class>
+                        <method>execute</method>
+                    </resolve_resolve_mfp_detection_customer_login>
+                </observers>
+            </customer_login>
+            <checkout_onepage_controller_success_action>
+                <observers>
+                    <resolve_order_success>
+                        <class>resolve/order_observer_afterOrderSuccess</class>
+                        <method>setResolveAnalyticsOnOrderSuccessPageView</method>
+                    </resolve_order_success>
+                </observers>
+            </checkout_onepage_controller_success_action>
+            <checkout_multishipping_controller_success_action>
+                <observers>
+                    <resolve_order_success>
+                        <class>resolve/order_observer_afterOrderSuccess</class>
+                        <method>setResolveAnalyticsOnOrderSuccessPageView</method>
+                    </resolve_order_success>
+                </observers>
+            </checkout_multishipping_controller_success_action>
         </events>
-    </frontend>
-
-    <default>
-        <payment>
-            <resolve>
-                <active>1</active>
-                <model>resolve/paymentmethod</model>
-                <order_status>pending</order_status>
-                <title>Resolve</title>
-                <allowspecific>0</allowspecific>
-                <group>online</group>
-                <account_mode>sandbox</account_mode>
-                <pre_order>1</pre_order>
-                <label_html_custom>Resolve</label_html_custom>
-                <checkout_button_active>0</checkout_button_active>
-                <checkout_button_code>Resolve</checkout_button_code>
-                <payment_action>authorize</payment_action>
-                <api_key_sandbox />
-                <secret_key_sandbox backend_model="adminhtml/system_config_backend_encrypted"/>
-                <api_key_production />
-                <secret_key_production backend_model="adminhtml/system_config_backend_encrypted"/>
-                <line_items_enabled>1</line_items_enabled>
-                <visible_on_cart>1</visible_on_cart>
-                <visible_on_product>1</visible_on_product>
-                <currency>USD</currency>
-                <min_order_total>0.01</min_order_total>
-                <max_order_total>50000</max_order_total>
-                <disable_for_backordered_items>0</disable_for_backordered_items>
-                <plain_text_title_enabled>0</plain_text_title_enabled>
-                <allowspecific>1</allowspecific>
-                <specificcountry>US</specificcountry>
-            </resolve>
-        </payment>
-    </default>
-
-    <frontend>
         <layout>
             <updates>
                 <resolve>
@@ -110,4 +252,177 @@
             </resolve>
         </routers>
     </frontend>
+    <adminhtml>
+        <events>
+            <controller_action_predispatch>
+                <observers>
+                    <resolve_adminnotification>
+                        <class>resolve/adminhtml_observer</class>
+                        <method>preDispatch</method>
+                    </resolve_adminnotification>
+                </observers>
+            </controller_action_predispatch>
+            <controller_action_predispatch_adminhtml_sales_order_create_save>
+                <observers>
+                    <resolve_resolve_model_before_order_save_admin>
+                        <type>singleton</type>
+                        <class>resolve/order_observer_beforeOrderSaveAdmin</class>
+                        <method>execute</method>
+                    </resolve_resolve_model_before_order_save_admin>
+                </observers>
+            </controller_action_predispatch_adminhtml_sales_order_create_save>
+            <controller_action_predispatch_adminhtml_sales_order_edit_save>
+                <observers>
+                    <resolve_resolve_model_before_order_edit_save_admin>
+                        <type>singleton</type>
+                        <class>resolve/order_observer_beforeOrderEditSaveAdmin</class>
+                        <method>execute</method>
+                    </resolve_resolve_model_before_order_edit_save_admin>
+                </observers>
+            </controller_action_predispatch_adminhtml_sales_order_edit_save>
+        </events>
+        <layout>
+            <updates>
+                <resolve>
+                    <file>resolve/resolve.xml</file>
+                </resolve>
+            </updates>
+        </layout>
+        <menu>
+            <promo>
+                <children>
+                    <resolve module="resolve" translate="title">
+                        <title>Manage Payment Restrictions Rules</title>
+                        <sort_order>3</sort_order>
+                        <action>adminhtml/rule</action>
+                    </resolve>
+                </children>
+            </promo>
+        </menu>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <promo>
+                            <children>
+                                <resolve module="resolve" translate="title">
+                                    <title>Manage Payment Restrictions Rules</title>
+                                </resolve>
+                            </children>
+                        </promo>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <resolve translate="title">
+                                            <title>Manage Payment Restrictions Rules</title>
+                                        </resolve>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Resolve_Resolve before="Mage_Adminhtml">Resolve_Resolve_Adminhtml</Resolve_Resolve>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <default>
+        <payment>
+            <resolve>
+                <active>0</active>
+                <account_mode>sandbox</account_mode>
+                <pre_order>1</pre_order>
+                <model>resolve/payment</model>
+                <!-- WARNING: default value for title removed to prevent it from appearing on checkout page on MCE 1.4.0.1 -->
+                <title>Resolve</title>
+                <label_html_custom>
+                    <![CDATA[Pay with NET terms
+                                    <svg width="68" height="12" viewBox="0 0 154 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <title>Resolve logo</title>
+                                      <path d="M59.445 29.636h3.881l-4.897-8.377c2.525-1.017 4.281-3.48 4.281-6.253 0-3.85-3.08-6.93-6.93-6.93h-8.624v21.56h3.542v-7.854h4.189l4.558 7.854zm-8.747-18.233h5.082c1.879 0 3.388 1.57 3.388 3.603 0 2.002-1.51 3.604-3.388 3.604h-5.082v-7.207zm16.963 11.95h12.258c.062-.431.124-.924.124-1.386 0-4.435-3.142-8.131-7.731-8.131-4.836 0-8.131 3.542-8.131 8.1 0 4.62 3.295 8.1 8.377 8.1 3.019 0 5.329-1.262 6.745-3.357l-2.74-1.601c-.74 1.078-2.126 1.91-3.974 1.91-2.464 0-4.404-1.233-4.928-3.635zm-.03-2.71c.461-2.31 2.155-3.789 4.65-3.789 2.002 0 3.942 1.14 4.404 3.789H67.63zm17.75-2.156c0-1.11 1.047-1.633 2.249-1.633 1.263 0 2.34.555 2.895 1.756l2.803-1.571c-1.078-2.033-3.173-3.203-5.698-3.203-3.142 0-5.637 1.817-5.637 4.712 0 5.513 8.285 3.973 8.285 6.715 0 1.232-1.14 1.724-2.618 1.724-1.694 0-2.925-.831-3.418-2.217l-2.865 1.663c.986 2.218 3.204 3.604 6.284 3.604 3.326 0 6.005-1.664 6.005-4.744 0-5.698-8.285-4.004-8.285-6.806zm18.113 11.55c4.528 0 8.131-3.542 8.131-8.1 0-4.59-3.603-8.101-8.131-8.101-4.497 0-8.131 3.511-8.131 8.1 0 4.559 3.634 8.1 8.131 8.1zm0-3.234c-2.71 0-4.805-2.064-4.805-4.867s2.095-4.866 4.805-4.866c2.71 0 4.805 2.063 4.805 4.866 0 2.803-2.095 4.867-4.805 4.867zm11.165 2.833h3.326V7.152h-3.326v22.484zm17.655-15.4l-4.281 11.704-4.312-11.704h-3.634l6.006 15.4h3.85l6.006-15.4h-3.635zm7.783 9.117h12.259c.061-.431.123-.924.123-1.386 0-4.435-3.142-8.131-7.731-8.131-4.836 0-8.131 3.542-8.131 8.1 0 4.62 3.295 8.1 8.377 8.1 3.019 0 5.329-1.262 6.746-3.357l-2.742-1.601c-.739 1.078-2.125 1.91-3.973 1.91-2.464 0-4.404-1.233-4.928-3.635zm-.031-2.71c.462-2.31 2.156-3.789 4.651-3.789 2.002 0 3.943 1.14 4.405 3.789h-9.056z" fill="#1f325d"></path>
+                                      <path d="M19.293 3.441l8.11 7.96-6.18 6.064-4.247-4.17L5.39 24.667l-3.861-3.79a3.174 3.174 0 0 1 0-4.548L14.659 3.44a3.32 3.32 0 0 1 4.633 0z" fill="#1f325d" fill-rule="evenodd" clip-rule="evenodd"></path>
+                                      <path d="M16.829 24.37L28.414 13l3.862 3.79a3.174 3.174 0 0 1 0 4.548l-13.13 12.886a3.32 3.32 0 0 1-4.634 0l-8.11-7.959 6.18-6.064 4.247 4.169z" fill="#1f325d" fill-rule="evenodd" clip-rule="evenodd"></path>
+                                    </svg>
+                    ]]>
+                </label_html_custom>
+                <description_html_custom>
+                    <![CDATA[You will be redirected to Resolve to securely complete your purchase. Just fill out a few pieces of basic information and get a real-time decision. Checking your eligibility won\'t affect your credit score.']]>
+                </description_html_custom>
+                <!--<checkout_button_active>0</checkout_button_active>-->
+                <!--<checkout_button_code>https://cdn-assets.resolve.com/images/buttons/30_148-white.png</checkout_button_code>-->
+                <payment_action>authorize</payment_action>
+                <api_key_sandbox />
+                <secret_key_sandbox backend_model="adminhtml/system_config_backend_encrypted"/>
+                <api_key_production />
+                <secret_key_production backend_model="adminhtml/system_config_backend_encrypted"/>
+                <line_items_enabled>1</line_items_enabled>
+                <visible_on_cart>1</visible_on_cart>
+                <visible_on_product>1</visible_on_product>
+                <currency>USD</currency>
+                <min_order_total>0.01</min_order_total>
+                <max_order_total>50000</max_order_total>
+                <disable_for_backordered_items>0</disable_for_backordered_items>
+                <plain_text_title_enabled>0</plain_text_title_enabled>
+                <allowspecific>1</allowspecific>
+                <specificcountry>US</specificcountry>
+                <notification_feed>https://github.com/Resolve/Magento_Resolve/releases.atom</notification_feed>
+                <notification_check_frequency>86400</notification_check_frequency>
+                <notification_update>1</notification_update>
+            </resolve>
+        </payment>
+        <!--<resolvepromo>-->
+            <!--<settings>-->
+                <!--<active>0</active>-->
+            <!--</settings>-->
+            <!--<developer_settings>-->
+                <!--<container_homepage><![CDATA[<div style="width: 100%; text-align: center; padding-bottom: 7px ">{container}</div>]]></container_homepage>-->
+                <!--<container_catalog_category><![CDATA[<div style="width: 100%; text-align: center; padding-bottom: 7px ">{container}</div>]]></container_catalog_category>-->
+                <!--<container_catalog_product><![CDATA[<div style="width: 100%; text-align: center; padding-bottom: 7px ">{container}</div>]]></container_catalog_product>-->
+                <!--<container_checkout_cart><![CDATA[<div style="width: 100%; text-align: center; padding-bottom: 7px ">{container}</div>]]></container_checkout_cart>-->
+                <!--<path_homepage>cms.index.index</path_homepage>-->
+                <!--<path_catalog_category>catalog.category.view</path_catalog_category>-->
+                <!--<path_catalog_product>catalog.product.view</path_catalog_product>-->
+                <!--<path_checkout_cart>checkout.cart.index</path_checkout_cart>-->
+            <!--</developer_settings>-->
+            <!--<homepage>-->
+                <!--<display>1</display>-->
+                <!--<size>170x100</size>-->
+                <!--<position>right-top</position>-->
+            <!--</homepage>-->
+            <!--<catalog_category>-->
+                <!--<display>1</display>-->
+                <!--<size>170x100</size>-->
+                <!--<position>left-top</position>-->
+            <!--</catalog_category>-->
+            <!--<catalog_product>-->
+                <!--<display>1</display>-->
+                <!--<size>468x60</size>-->
+                <!--<position>right-top</position>-->
+            <!--</catalog_product>-->
+            <!--<checkout_cart>-->
+                <!--<display>1</display>-->
+                <!--<size>468x60</size>-->
+                <!--<position>center-top</position>-->
+            <!--</checkout_cart>-->
+            <!--<as_low_as>-->
+                <!--<apr_value>0.10</apr_value>-->
+                <!--<promo_months>12</promo_months>-->
+                <!--<learn_more>1</learn_more>-->
+            <!--</as_low_as>-->
+        <!--</resolvepromo>-->
+    </default>
 </config>

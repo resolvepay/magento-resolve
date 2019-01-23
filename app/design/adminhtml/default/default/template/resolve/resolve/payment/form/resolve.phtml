@@ -1,0 +1,21 @@
+<?php
+/** @var Resolve_Resolve_Block_Payment_Form $this **/
+?>
+<style type="text/css">
+    .resolve-module-version {
+        display: none;
+    }
+
+    .resolve_payment_info {
+        color: #6f6f6f;
+        font-size: 14px;
+    }
+</style>
+<ul class="form-list resolve" id="payment_form_resolve" style="display:none;">
+    <li class="form-alt">
+            <div class="resolve_payment_info">
+                <p><?php echo $this->__('The customer will receive an email and SMS with the Resolve checkout link to begin their loan application. After confirming the loan, they’ll be redirected to your site. If they abandon the loan application or if their loan is declined, they’ll see an error message on your site. Selecting Resolve as a payment option requires enabling Telesales in Magento.'); ?></p>
+            </div>
+    </li>
+</ul>
+<span class="resolve-module-version"><?php echo $this->helper('resolve')->getModuleConfigVersion(); ?></span>

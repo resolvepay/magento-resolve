@@ -1,13 +1,10 @@
 <?xml version="1.0"?>
 <config>
-    <modules>
-        <Resolve_Resolve>
-            <active>true</active>
-            <codePool>community</codePool>
-
-            <depends>
-                <Mage_Payment />
-            </depends>
-        </Resolve_Resolve>
-    </modules>
+  <modules>
+    <Resolve_Resolve>
+      <active>true</active>
+      <codePool>community</codePool>
+    </Resolve_Resolve>
+  </modules>
 </config>
+

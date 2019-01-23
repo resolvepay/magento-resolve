@@ -1,14 +1,50 @@
 <?xml version="1.0"?>
+<!--
+  ~ /*
+  ~  * BSD 3-Clause License
+  ~  *
+  ~  * Copyright (c) 2018, Resolve
+  ~  * All rights reserved.
+  ~  *
+  ~  * Redistribution and use in source and binary forms, with or without
+  ~  * modification, are permitted provided that the following conditions are met:
+  ~  *
+  ~  *  Redistributions of source code must retain the above copyright notice, this
+  ~  *   list of conditions and the following disclaimer.
+  ~  *
+  ~  *  Redistributions in binary form must reproduce the above copyright notice,
+  ~  *   this list of conditions and the following disclaimer in the documentation
+  ~  *   and/or other materials provided with the distribution.
+  ~  *
+  ~  *  Neither the name of the copyright holder nor the names of its
+  ~  *   contributors may be used to endorse or promote products derived from
+  ~  *   this software without specific prior written permission.
+  ~  *
+  ~  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  ~  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  ~  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  ~  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+  ~  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  ~  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  ~  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  ~  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  ~  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  ~  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  ~  */
+  -->
+
 <config>
     <sections>
         <payment>
             <groups>
                 <resolve translate="label" module="resolve">
                     <label>Resolve</label>
-                    <sort_order>1</sort_order>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
-                    <show_in_store>0</show_in_store>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
                     <fields>
                         <version translate="label">
                             <label>Extension Version</label>
@@ -38,7 +74,7 @@
                             <show_in_store>0</show_in_store>
                         </active>
                         <api_key_sandbox translate="label">
-                            <label>Merchant ID</label>
+                            <label>Public API Key</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
@@ -49,10 +85,9 @@
                             </depends>
                         </api_key_sandbox>
                         <secret_key_sandbox translate="label">
-                            <label>Secret API Key</label>
+                            <label>Private API Key</label>
                             <frontend_type>obscure</frontend_type>
                             <backend_model>adminhtml/system_config_backend_encrypted</backend_model>
-                            <comment>sandbox key</comment>
                             <sort_order>12</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -73,10 +108,9 @@
                             </depends>
                         </api_key_production>
                         <secret_key_production translate="label">
-                            <label>Secret API Key</label>
+                            <label>Private API Key</label>
                             <frontend_type>obscure</frontend_type>
                             <backend_model>adminhtml/system_config_backend_encrypted</backend_model>
-                            <comment>production key</comment>
                             <sort_order>12</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -152,9 +186,614 @@
                                 <plain_text_title_enabled>0</plain_text_title_enabled>
                             </depends>
                         </label_html_custom>
+                        <plain_text_description_enabled translate="label">
+                            <label>Plain Description Text Appearance</label>
+                            <comment>controls the appearance of the payment
+                                option at checkout
+                            </comment>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>219</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_store>0</show_in_store>
+                            <show_in_website>1</show_in_website>
+                        </plain_text_description_enabled>
+                        <description_html_custom translate="label">
+                            <label>Resolve Payment Method Description HTML</label>
+                            <comment>custom description html text</comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>218</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_store>0</show_in_store>
+                            <show_in_website>1</show_in_website>
+                            <depends>
+                                <plain_text_description_enabled>0</plain_text_description_enabled>
+                            </depends>
+                        </description_html_custom>
+                        <!--<checkout_button_active translate="label">-->
+                            <!--<label>Enabled Checkout Button</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                            <!--<sort_order>220</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</checkout_button_active>-->
+                        <!--<checkout_button_code translate="label">-->
+                            <!--<label>Checkout Button Code</label>-->
+                            <!--<comment>-->
+                                <!--<![CDATA[Copy button url from http://help.merchants.resolve.com/article/65-checkout-buttons, please start with http://]]></comment>-->
+                            <!--<frontend_type>textarea</frontend_type>-->
+                            <!--<sort_order>225</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                            <!--<depends>-->
+                                <!--<checkout_button_active>1</checkout_button_active>-->
+                            <!--</depends>-->
+                        <!--</checkout_button_code>-->
+                        <!--<checkout_flow_type translate="label">-->
+                            <!--<label>Checkout Flow Type (Beta)</label>-->
+                            <!--<comment>-->
+                                <!--<![CDATA[Checkout flow using redirect or modal]]></comment>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>resolve/source_paymentCheckoutFlow</source_model>-->
+                            <!--<sort_order>230</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                            <!--<tooltip>Modal checkout flow is currently in beta. After enabling this, if you encounter any issues with the checkout flow, reach out to Resolve.</tooltip>-->
+                        <!--</checkout_flow_type>-->
+                        <detect_xhr_checkout translate="label">
+                            <label>Checkout uses xhr</label>
+                            <comment>
+                                <![CDATA[Only applicable with Redirect checkout flow type. Use 'Checkout uses redirect' option only when checkout use non-js 'place order' call on the last step.]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>resolve/source_paymentCheckoutXhr</source_model>
+                            <sort_order>235</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </detect_xhr_checkout>
+                        <pre_order translate="label">
+                            <comment>Only applicable with Redirect checkout flow type. Enable for an improved order management experience. Disable if there are
+                                compatibility issues.
+                            </comment>
+                            <label>Create orders after Resolve confirmation</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>240</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </pre_order>
+                        <heading_notification translate="label">
+                            <label>Notification</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>245</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </heading_notification>
+                        <notification_update translate="label">
+                            <label>I'd like to be informed about Resolve extension updates</label>
+                            <comment><![CDATA[]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>250</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </notification_update>
                     </fields>
                 </resolve>
             </groups>
         </payment>
+        <!--<resolvepromo translate="label" module="resolve">-->
+            <!--<label>Resolve Promos</label>-->
+            <!--<tab>general</tab>-->
+            <!--<frontend_type>text</frontend_type>-->
+            <!--<sort_order>9999</sort_order>-->
+            <!--<show_in_default>1</show_in_default>-->
+            <!--<show_in_website>1</show_in_website>-->
+            <!--<show_in_store>1</show_in_store>-->
+            <!--<groups>-->
+                <!--<settings translate="label">-->
+                    <!--<label>Banner Settings</label>-->
+                    <!--<frontend_type>text</frontend_type>-->
+                    <!--<sort_order>10</sort_order>-->
+                    <!--<show_in_default>1</show_in_default>-->
+                    <!--<show_in_website>1</show_in_website>-->
+                    <!--<show_in_store>0</show_in_store>-->
+                    <!--<expanded>1</expanded>-->
+                    <!--<fields>-->
+                        <!--<active translate="label">-->
+                            <!--<label>Enabled</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                            <!--<sort_order>4</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</active>-->
+                    <!--</fields>-->
+                <!--</settings>-->
+                <!--<homepage>-->
+                    <!--<label>Home Page Settings</label>-->
+                    <!--<frontend_type>text</frontend_type>-->
+                    <!--<sort_order>20</sort_order>-->
+                    <!--<show_in_default>1</show_in_default>-->
+                    <!--<show_in_website>1</show_in_website>-->
+                    <!--<show_in_store>0</show_in_store>-->
+                    <!--<expanded>1</expanded>-->
+                    <!--<fields>-->
+                        <!--<display translate="label">-->
+                            <!--<label>Display</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                            <!--<sort_order>1</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</display>-->
+                        <!--<size translate="label">-->
+                            <!--<label>Promo Size</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>resolve/promo_system_config_size</source_model>-->
+                            <!--<sort_order>2</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</size>-->
+                        <!--<position translate="label">-->
+                            <!--<label>Promo Position</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>resolve/promo_system_config_position</source_model>-->
+                            <!--<sort_order>3</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</position>-->
+                    <!--</fields>-->
+                <!--</homepage>-->
+                <!--<catalog_category>-->
+                    <!--<label>Catalog Category Page Settings</label>-->
+                    <!--<frontend_type>text</frontend_type>-->
+                    <!--<sort_order>30</sort_order>-->
+                    <!--<show_in_default>1</show_in_default>-->
+                    <!--<show_in_website>1</show_in_website>-->
+                    <!--<show_in_store>0</show_in_store>-->
+                    <!--<expanded>1</expanded>-->
+                    <!--<fields>-->
+                        <!--<display translate="label">-->
+                            <!--<label>Display</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                            <!--<sort_order>1</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</display>-->
+                        <!--<size translate="label">-->
+                            <!--<label>Promo Size</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>resolve/promo_system_config_size</source_model>-->
+                            <!--<sort_order>2</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</size>-->
+                        <!--<position translate="label">-->
+                            <!--<label>Promo Position</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>resolve/promo_system_config_position</source_model>-->
+                            <!--<sort_order>3</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</position>-->
+                    <!--</fields>-->
+                <!--</catalog_category>-->
+                <!--<catalog_product>-->
+                    <!--<label>Catalog Product Page Settings</label>-->
+                    <!--<frontend_type>text</frontend_type>-->
+                    <!--<sort_order>40</sort_order>-->
+                    <!--<show_in_default>1</show_in_default>-->
+                    <!--<show_in_website>1</show_in_website>-->
+                    <!--<show_in_store>0</show_in_store>-->
+                    <!--<expanded>1</expanded>-->
+                    <!--<fields>-->
+                        <!--<display translate="label">-->
+                            <!--<label>Display</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                            <!--<sort_order>1</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</display>-->
+                        <!--<size translate="label">-->
+                            <!--<label>Promo Size</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>resolve/promo_system_config_size</source_model>-->
+                            <!--<sort_order>2</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</size>-->
+                        <!--<position translate="label">-->
+                            <!--<label>Promo Position</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>resolve/promo_system_config_position</source_model>-->
+                            <!--<sort_order>3</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</position>-->
+                    <!--</fields>-->
+                <!--</catalog_product>-->
+                <!--<checkout_cart>-->
+                    <!--<label>Checkout Cart Page Settings</label>-->
+                    <!--<frontend_type>text</frontend_type>-->
+                    <!--<sort_order>50</sort_order>-->
+                    <!--<show_in_default>1</show_in_default>-->
+                    <!--<show_in_website>1</show_in_website>-->
+                    <!--<show_in_store>0</show_in_store>-->
+                    <!--<expanded>1</expanded>-->
+                    <!--<fields>-->
+                        <!--<display translate="label">-->
+                            <!--<label>Display</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                            <!--<sort_order>1</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</display>-->
+                        <!--<size translate="label">-->
+                            <!--<label>Promo Size</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>resolve/promo_system_config_size</source_model>-->
+                            <!--<sort_order>2</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</size>-->
+                        <!--<position translate="label">-->
+                            <!--<label>Promo Position</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>resolve/promo_system_config_position</source_model>-->
+                            <!--<sort_order>3</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</position>-->
+                    <!--</fields>-->
+                <!--</checkout_cart>-->
+                <!--<developer_settings translate="label">-->
+                    <!--<label>Developer Settings</label>-->
+                    <!--<frontend_type>text</frontend_type>-->
+                    <!--<sort_order>1000</sort_order>-->
+                    <!--<show_in_default>1</show_in_default>-->
+                    <!--<show_in_website>1</show_in_website>-->
+                    <!--<show_in_store>0</show_in_store>-->
+                    <!--<expanded>0</expanded>-->
+                    <!--<fields>-->
+                        <!--<container_homepage translate="label,comment">-->
+                            <!--<label>Homepage Container</label>-->
+                            <!--<comment>-->
+                                <!--<![CDATA[Place html code with "{container}"-tag inside, which will be replaced with your promo block]]></comment>-->
+                            <!--<frontend_type>textarea</frontend_type>-->
+                            <!--<sort_order>11</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</container_homepage>-->
+                        <!--<container_catalog_category translate="label,comment">-->
+                            <!--<label>Catalog Category Container</label>-->
+                            <!--<comment>-->
+                                <!--<![CDATA[Place html code with "{container}"-tag inside, which will be replaced with your promo block]]></comment>-->
+                            <!--<frontend_type>textarea</frontend_type>-->
+                            <!--<sort_order>21</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</container_catalog_category>-->
+                        <!--<container_catalog_product translate="label,comment">-->
+                            <!--<label>Catalog Product Container</label>-->
+                            <!--<comment>-->
+                                <!--<![CDATA[Place html code with "{container}"-tag inside, which will be replaced with your promo block]]></comment>-->
+                            <!--<frontend_type>textarea</frontend_type>-->
+                            <!--<sort_order>31</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</container_catalog_product>-->
+                        <!--<container_checkout_cart translate="label,comment">-->
+                            <!--<label>Checkout Cart Container</label>-->
+                            <!--<comment>-->
+                                <!--<![CDATA[Place html code with "{container}"-tag inside, which will be replaced with your promo block]]></comment>-->
+                            <!--<frontend_type>textarea</frontend_type>-->
+                            <!--<sort_order>41</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</container_checkout_cart>-->
+                        <!--<path_homepage translate="label">-->
+                            <!--<label>Home Page Path</label>-->
+                            <!--<frontend_type>text</frontend_type>-->
+                            <!--<sort_order>10</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</path_homepage>-->
+                        <!--<path_catalog_category translate="label">-->
+                            <!--<label>Catalog Category Path</label>-->
+                            <!--<frontend_type>text</frontend_type>-->
+                            <!--<sort_order>20</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</path_catalog_category>-->
+                        <!--<path_catalog_product translate="label">-->
+                            <!--<label>Catalog Product Path</label>-->
+                            <!--<frontend_type>text</frontend_type>-->
+                            <!--<sort_order>30</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</path_catalog_product>-->
+                        <!--<path_checkout_cart translate="label">-->
+                            <!--<label>Checkout Cart Path</label>-->
+                            <!--<frontend_type>text</frontend_type>-->
+                            <!--<sort_order>40</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</path_checkout_cart>-->
+                    <!--</fields>-->
+                <!--</developer_settings>-->
+                <!--<as_low_as translate="label">-->
+                    <!--<label>As Low As Functionality</label>-->
+                    <!--<frontend_type>text</frontend_type>-->
+                    <!--<sort_order>1100</sort_order>-->
+                    <!--<show_in_default>1</show_in_default>-->
+                    <!--<show_in_website>1</show_in_website>-->
+                    <!--<show_in_store>0</show_in_store>-->
+                    <!--<expanded>0</expanded>-->
+                    <!--<fields>-->
+                        <!--<as_low_as_pdp translate="label">-->
+                            <!--<label>Enable for Product PDP</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                            <!--<sort_order>10</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</as_low_as_pdp>-->
+                        <!--<as_low_as_plp translate="label">-->
+                            <!--<label>Enable for Category PLP</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                            <!--<sort_order>20</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</as_low_as_plp>-->
+                        <!--<as_low_as_cart translate="label">-->
+                            <!--<label>Enable for Shopping Cart</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                            <!--<sort_order>30</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</as_low_as_cart>-->
+                        <!--<min_mpp_display_value translate="label">-->
+                            <!--<label>MPP min amount</label>-->
+                            <!--<frontend_type>text</frontend_type>-->
+                            <!--<validate>validate-number</validate>-->
+                            <!--<comment>-->
+                                <!--<![CDATA[Minimum amount for displaying the (MPP - monthly payment pricing)]]></comment>-->
+                            <!--<sort_order>50</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</min_mpp_display_value>-->
+                        <!--<learn_more translate="label">-->
+                            <!--<label>Enable Learn More</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                            <!--<sort_order>60</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</learn_more>-->
+                        <!--<promo_id_value_default translate="label">-->
+                            <!--<label>Default Resolve Promo ID</label>-->
+                            <!--<frontend_type>text</frontend_type>-->
+                            <!--<sort_order>212</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</promo_id_value_default>-->
+                    <!--</fields>-->
+                <!--</as_low_as>-->
+                <!--<mfp translate="label">-->
+                    <!--<label>Multiple Financing Program</label>-->
+                    <!--<frontend_type>text</frontend_type>-->
+                    <!--<sort_order>1200</sort_order>-->
+                    <!--<show_in_default>1</show_in_default>-->
+                    <!--<show_in_website>1</show_in_website>-->
+                    <!--<show_in_store>0</show_in_store>-->
+                    <!--<expanded>0</expanded>-->
+                    <!--<fields>-->
+                        <!--<financing_program_value_default translate="label">-->
+                            <!--<label>Default Financing Program value</label>-->
+                            <!--<frontend_type>text</frontend_type>-->
+                            <!--<sort_order>202</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</financing_program_value_default>-->
+                        <!--<financing_program_value translate="label">-->
+                            <!--<label>Financing Program value</label>-->
+                            <!--<frontend_type>text</frontend_type>-->
+                            <!--<sort_order>204</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</financing_program_value>-->
+                        <!--<start_date_mfp translate="label">-->
+                            <!--<label>Start date for Financing Program value</label>-->
+                            <!--<frontend_type>text</frontend_type>-->
+                            <!--<frontend_model>resolve/adminhtml_system_config_date</frontend_model>-->
+                            <!--<sort_order>206</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</start_date_mfp>-->
+                        <!--<end_date_mfp translate="label">-->
+                            <!--<label>End date for Financing Program value</label>-->
+                            <!--<frontend_type>text</frontend_type>-->
+                            <!--<frontend_model>resolve/adminhtml_system_config_date</frontend_model>-->
+                            <!--<sort_order>207</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</end_date_mfp>-->
+                        <!--<promo_id_value translate="label">-->
+                            <!--<label>Resolve Promo ID</label>-->
+                            <!--<frontend_type>text</frontend_type>-->
+                            <!--<sort_order>208</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</promo_id_value>-->
+                        <!--<cart_size_mfp_value translate="label">-->
+                            <!--<label>Cart-size Financing Program value</label>-->
+                            <!--<frontend_type>text</frontend_type>-->
+                            <!--<sort_order>209</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</cart_size_mfp_value>-->
+                        <!--<min_order_total_mfp translate="label">-->
+                            <!--<label>Financing Program Minimum Order Total</label>-->
+                            <!--<frontend_type>text</frontend_type>-->
+                            <!--<sort_order>210</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</min_order_total_mfp>-->
+                        <!--<max_order_total_mfp translate="label">-->
+                            <!--<label>Financing Program Maximum Order Total</label>-->
+                            <!--<frontend_type>text</frontend_type>-->
+                            <!--<sort_order>211</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</max_order_total_mfp>-->
+                        <!--<cart_size_promo_id_value translate="label">-->
+                            <!--<label>Cart-size Resolve Promo ID</label>-->
+                            <!--<frontend_type>text</frontend_type>-->
+                            <!--<sort_order>212</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</cart_size_promo_id_value>-->
+                    <!--</fields>-->
+                <!--</mfp>-->
+                <!--<pixel translate="label">-->
+                    <!--<label>Enhanced Analytics</label>-->
+                    <!--<frontend_type>text</frontend_type>-->
+                    <!--<sort_order>1300</sort_order>-->
+                    <!--<show_in_default>1</show_in_default>-->
+                    <!--<show_in_website>1</show_in_website>-->
+                    <!--<show_in_store>0</show_in_store>-->
+                    <!--<expanded>0</expanded>-->
+                    <!--<fields>-->
+                        <!--<enabled translate="label">-->
+                            <!--<label>Enable Resolve pixel</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                            <!--<sort_order>220</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                            <!--<comment>Enable resolve tracking pixels</comment>-->
+                        <!--</enabled>-->
+                        <!--<enable_pixel_actions translate="label">-->
+                            <!--<label>Enable Resolve pixel for following pages :</label>-->
+                            <!--<frontend_model>adminhtml/system_config_form_field_heading</frontend_model>-->
+                            <!--<sort_order>230</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</enable_pixel_actions>-->
+                        <!--<add_cart translate="label">-->
+                            <!--<label>Add to Cart</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                            <!--<sort_order>240</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>1</show_in_store>-->
+                            <!--<comment>Enable add to cart tracking</comment>-->
+                        <!--</add_cart>-->
+                        <!--<add_search translate="label">-->
+                            <!--<label>Search</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                            <!--<sort_order>260</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>1</show_in_store>-->
+                            <!--<comment>Enable search tracking</comment>-->
+                        <!--</add_search>-->
+                        <!--<add_product_view translate="label">-->
+                            <!--<label>Product</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                            <!--<sort_order>270</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>1</show_in_store>-->
+                            <!--<comment>Enable product tracking</comment>-->
+                        <!--</add_product_view>-->
+                        <!--<add_product_list translate="label">-->
+                            <!--<label>Product List</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                            <!--<sort_order>280</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>1</show_in_store>-->
+                            <!--<comment>Enable product list tracking</comment>-->
+                        <!--</add_product_list>-->
+                        <!--<add_checkout_start translate="label">-->
+                            <!--<label>Checkout Start</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                            <!--<sort_order>290</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>1</show_in_store>-->
+                            <!--<comment>Enable checkout start tracking</comment>-->
+                        <!--</add_checkout_start>-->
+                        <!--<add_checkout_success translate="label">-->
+                            <!--<label>Checkout Success</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<source_model>adminhtml/system_config_source_yesno</source_model>-->
+                            <!--<sort_order>300</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                            <!--<comment>Enable checkout success tracking</comment>-->
+                        <!--</add_checkout_success>-->
+                    <!--</fields>-->
+                <!--</pixel>-->
+            <!--</groups>-->
+        <!--</resolvepromo>-->
     </sections>
 </config>

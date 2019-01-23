@@ -1,5 +1,24 @@
 <?php
+/**
+ * OnePica
+ * NOTICE OF LICENSE
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to codemaster@onepica.com so we can send you a copy immediately.
+ *
+ * @category    Resolve
+ * @package     Resolve_Resolve
+ * @copyright   Copyright (c) 2014 One Pica, Inc. (http://www.onepica.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
 
+/**
+ * Class Resolve_Resolve_Model_Credential
+ */
 class Resolve_Resolve_Model_Credential
 {
     /**
@@ -46,7 +65,7 @@ class Resolve_Resolve_Model_Credential
      *
      * @param Mage_Core_Model_Store $store
      * @return mixed
-     * @throws Resolve_RESOLVE_Exception
+     * @throws Resolve_Resolve_Exception
      */
     protected function _getCredentialModel($store = null)
     {
@@ -61,17 +80,6 @@ class Resolve_Resolve_Model_Credential
             $this->_credentialModelsCache[$storeCacheId] = $model;
         }
         return $this->_credentialModelsCache[$storeCacheId];
-    }
-
-    /**
-     * Get api url
-     *
-     * @param Mage_Core_Model_Store $store
-     * @return string
-     */
-    public function getPaymentMode($store = null)
-    {
-        return Mage::getStoreConfig(self::PAYMENT_RESOLVE_ACCOUNT_MODE, $store);
     }
 
     /**
@@ -105,5 +113,15 @@ class Resolve_Resolve_Model_Credential
     public function getSecretKey($store = null)
     {
         return $this->_getCredentialModel($store)->getSecretKey($store);
+    }
+    /**
+     * Get payment account mode
+     *
+     * @param Mage_Core_Model_Store $store
+     * @return string
+     */
+    public function getPaymentMode($store = null)
+    {
+        return Mage::getStoreConfig(self::PAYMENT_RESOLVE_ACCOUNT_MODE, $store);
     }
 }
