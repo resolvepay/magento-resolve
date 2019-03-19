@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<layout>
+    <adminhtml_resolve_errorordercreatepageonresolvepayment>
+        <reference name="content">
+            <block type="core/template" name="resolve-error-block"
+                   template="resolve/resolve/errorOrderCreatePageOnResolvePayment.phtml"/>
+        </reference>
+    </adminhtml_resolve_errorordercreatepageonresolvepayment>
+
+    <adminhtml_compatibility_tool_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/resolve/resolve.js</name>
+            </action>
+        </reference>
+
+    </adminhtml_compatibility_tool_index>
+
+</layout>

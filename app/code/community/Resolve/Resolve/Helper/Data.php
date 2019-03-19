@@ -1,8 +1,27 @@
 <?php
+/**
+ * OnePica
+ * NOTICE OF LICENSE
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to codemaster@onepica.com so we can send you a copy immediately.
+ *
+ * @category    Resolve
+ * @package     Resolve_Resolve
+ * @copyright   Copyright (c) 2014 One Pica, Inc. (http://www.onepica.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+/**
+ * Class Resolve_Resolve_Helper_Data
+ */
 class Resolve_Resolve_Helper_Data extends Mage_Core_Helper_Abstract
 {
- 
-  /**
+    /**
      * Path to title plain text enabler
      */
     const RESOLVE_PLAIN_TEXT_ENABLED = 'payment/resolve/plain_text_title_enabled';
@@ -11,6 +30,16 @@ class Resolve_Resolve_Helper_Data extends Mage_Core_Helper_Abstract
      * Path to label html
      */
     const LABEL_HTML_CUSTOM = 'payment/resolve/label_html_custom';
+
+    /**
+     * Path to description plain text enabler
+     */
+    const RESOLVE_PLAIN_TEXT_DESCRIPTION_ENABLED = 'payment/resolve/plain_text_description_enabled';
+
+    /**
+     * Path to description html
+     */
+    const DESCRIPTION_HTML_CUSTOM = 'payment/resolve/description_html_custom';
 
     /**
      * Payment resolve XHR checkout
@@ -63,12 +92,6 @@ class Resolve_Resolve_Helper_Data extends Mage_Core_Helper_Abstract
      */
     protected $_disabledBackOrderedPdp;
 
-
-    public function getPaymentGatewayUrl() 
-    {
-      return Mage::getUrl('resolve/payment/gateway', array('_secure' => false));
-    }
-  
     /**
      * Returns extension version
      *
@@ -108,6 +131,20 @@ class Resolve_Resolve_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Returns is enabled description text
+     *
+     * @param Mage_Core_Model_Store $store
+     * @return bool
+     */
+    public function isPlainDescriptionTextEnabled($store = null)
+    {
+        if($store == null) {
+            $store = Mage::app()->getStore()->getStoreId();
+        }
+        return Mage::getStoreConfigFlag(self::RESOLVE_PLAIN_TEXT_DESCRIPTION_ENABLED, $store);
+    }
+
+    /**
      * Check is base currency non dollar
      *
      * @param Mage_Payment_Model_Method_Abstract $method
@@ -127,7 +164,7 @@ class Resolve_Resolve_Helper_Data extends Mage_Core_Helper_Abstract
     {
         if (null === $this->_disabledModule) {
             $payments = Mage::getSingleton('payment/config')->getAllMethods();
-            $method = $payments[Resolve_Resolve_Model_Paymentmethod::METHOD_CODE];
+            $method = $payments[Resolve_Resolve_Model_Payment::METHOD_CODE];
             $this->_disabledModule = $this->isNonDollarCurrencyStore($method);
         }
         return $this->_disabledModule;
@@ -145,6 +182,19 @@ class Resolve_Resolve_Helper_Data extends Mage_Core_Helper_Abstract
             $store = Mage::app()->getStore()->getStoreId();
         }
         return Mage::getStoreConfig(self::LABEL_HTML_CUSTOM, $store);
+    }
+    /**
+     * Returns html of description
+     *
+     * @param Mage_Core_Model_Store $store
+     * @return string
+     */
+    public function getDescriptionHtmlAfter($store = null)
+    {
+        if($store == null) {
+            $store = Mage::app()->getStore()->getStoreId();
+        }
+        return Mage::getStoreConfig(self::DESCRIPTION_HTML_CUSTOM, $store);
     }
 
     /**
@@ -275,14 +325,43 @@ class Resolve_Resolve_Helper_Data extends Mage_Core_Helper_Abstract
     public function isCheckoutFlowTypeModal($store = null)
     {
         $configCheckoutType = Mage::helper('resolve')->getCheckoutFlowType();
-        if ($configCheckoutType == Resolve_Resolve_Model_Paymentmethod::CHECKOUT_FLOW_MODAL) {
+        if ($configCheckoutType == Resolve_Resolve_Model_Payment::CHECKOUT_FLOW_MODAL) {
             return true;
         } else {
             return false;
         }
     }
 
-  
+    /**
+     * Get resolve js url
+     *
+     * @return string
+     */
+//    public function getResolveJsUrl()
+//    {
+//        $apiUrl = $this->getApiUrl();
+//        $parsedUrl = Mage::getModel('core/url')->parseUrl($apiUrl);
+//        $domain = $parsedUrl->getHost();
+//        $domain = str_ireplace('www.', '', $domain);
+//        $domain = str_ireplace('api.', '', $domain);
+//        $prefix = 'cdn1.';
+//        if (strpos($domain, 'sandbox') === 0) {
+//            $prefix = 'cdn1-';
+//        }
+//        return 'https://' . $prefix . '' . $domain . '/js/v2/resolve.js';
+//    }
+
+    /**
+     * Get resolve js text
+     *
+     * @return string
+     */
+//    public function getResolveJs()
+//    {
+//        $resolveJs = '<script type="text/javascript"></script>';
+//        return $resolveJs;
+//    }
+
     /**
      * Is xhr request
      *
@@ -293,9 +372,9 @@ class Resolve_Resolve_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $detectedXhr = isset($proxyRequest['xhr']) && $proxyRequest['xhr'];
         $configXhr = Mage::helper('resolve')->getDetectXHRCheckout();
-        if ($configXhr == Resolve_Resolve_Model_Paymentmethod::CHECKOUT_REDIRECT) {
+        if ($configXhr == Resolve_Resolve_Model_Payment::CHECKOUT_REDIRECT) {
             return false;
-        } elseif ($configXhr == Resolve_Resolve_Model_Paymentmethod::CHECKOUT_XHR) {
+        } elseif ($configXhr == Resolve_Resolve_Model_Payment::CHECKOUT_XHR) {
             return true;
         } else {
             return $detectedXhr;
@@ -342,13 +421,13 @@ class Resolve_Resolve_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * Get resolve payment method
      *
-     * @return Resolve_Resolve_Model_Paymentmethod}null
+     * @return Resolve_Resolve_Model_Payment}null
      */
     public function getResolvePaymentMethod()
     {
         $payments = Mage::getSingleton('payment/config')->getActiveMethods();
-        $method = isset($payments[Resolve_Resolve_Model_Paymentmethod::METHOD_CODE])
-            ? $payments[Resolve_Resolve_Model_Paymentmethod::METHOD_CODE]
+        $method = isset($payments[Resolve_Resolve_Model_Payment::METHOD_CODE])
+            ? $payments[Resolve_Resolve_Model_Payment::METHOD_CODE]
             : null;
         return $method;
     }
@@ -489,7 +568,7 @@ class Resolve_Resolve_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Get template for button in order review page if resolve method was selected and checkout flow type is modal
+     * Get template for button in order review page if Resolve method was selected and checkout flow type is modal
      *
      * @param string $name template name
      * @param string $block buttons block name
@@ -498,10 +577,9 @@ class Resolve_Resolve_Helper_Data extends Mage_Core_Helper_Abstract
     public function getReviewButtonTemplate($name, $block)
     {
         $quote = Mage::getSingleton('checkout/session')->getQuote();
-        
         if ($quote) {
             $payment = $quote->getPayment();
-            if ($payment && ($payment->getMethod() == Resolve_Resolve_Model_Paymentmethod::METHOD_CODE)) {
+            if ($payment && ($payment->getMethod() == Resolve_Resolve_Model_Payment::METHOD_CODE) && $this->isCheckoutFlowTypeModal()) {
                 return $name;
             }
         }
@@ -514,7 +592,7 @@ class Resolve_Resolve_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Get resolve modal checkout js
+     * Get Resolve modal checkout js
      *
      * @return string
      */
@@ -598,26 +676,5 @@ class Resolve_Resolve_Helper_Data extends Mage_Core_Helper_Abstract
             '1' => Mage::helper('salesrule')->__('Active'),
             '0' => Mage::helper('salesrule')->__('Inactive'),
         );
-    }
-    protected function _getQuote($quoteId)
-    {
-        return Mage::getModel('sales/quote')->load($quoteId);
-    }
-    public function restoreQuote()
-    {
-        $order = $this->getCheckoutSession()->getLastRealOrder();
-        if ($order->getId()) {
-            $quote = $this->_getQuote($order->getQuoteId());
-            if ($quote->getId()) {
-                $quote->setIsActive(1)
-                    ->setReservedOrderId(null)
-                    ->save();
-                $this->getCheckoutSession()
-                    ->replaceQuote($quote)
-                    ->unsLastRealOrderId();
-                return true;
-            }
-        }
-        return false;
     }
 }

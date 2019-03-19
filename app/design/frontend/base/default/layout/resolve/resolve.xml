@@ -1,22 +1,195 @@
 <?xml version="1.0"?>
+<!--
+  ~ /*
+  ~  * BSD 3-Clause License
+  ~  *
+  ~  * Copyright (c) 2018, Resolve
+  ~  * All rights reserved.
+  ~  *
+  ~  * Redistribution and use in source and binary forms, with or without
+  ~  * modification, are permitted provided that the following conditions are met:
+  ~  *
+  ~  *  Redistributions of source code must retain the above copyright notice, this
+  ~  *   list of conditions and the following disclaimer.
+  ~  *
+  ~  *  Redistributions in binary form must reproduce the above copyright notice,
+  ~  *   this list of conditions and the following disclaimer in the documentation
+  ~  *   and/or other materials provided with the distribution.
+  ~  *
+  ~  *  Neither the name of the copyright holder nor the names of its
+  ~  *   contributors may be used to endorse or promote products derived from
+  ~  *   this software without specific prior written permission.
+  ~  *
+  ~  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  ~  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  ~  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  ~  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+  ~  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  ~  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  ~  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  ~  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  ~  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  ~  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  ~  */
+  -->
+
 <layout>
     <default>
         <reference name="head">
             <action method="addItem">
                 <type>skin_js</type>
-                <name>js/resolve/resolve.js</name>
+                <name>js/resolve/promos.js</name>
             </action>
+            <block type="core/text" name="resolve.cdn.javascript">
+                <action method="setText">
+                    <text helper="resolve/getResolveJs" />
+                </action>
+            </block>
+            <reference name="after_body_start">
+                <block type="resolve/promo_pixel_code" name="resolve_pixel_code">
+                    <action method="setTemplate" ifconfig="resolvepromo/pixel/enabled">
+                        <template>resolve/promo/pixel/code.phtml</template>
+                    </action>
+                </block>
+            </reference>
         </reference>
     </default>
-    <checkout_onepage_review>
-        <reference name="checkout.onepage.review.button">
-            <action method="setTemplate">
-                <template helper="resolve/getReviewButtonTemplate">
-                    <name>resolve/checkout/review/button.phtml</name>
-                    <block>checkout.onepage.review.button</block>
-                </template>
+    <checkout_cart_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name helper="resolve/promo_data/getCheckoutResolveJsScript" />
             </action>
         </reference>
+        <reference name="checkout.cart.top_methods">
+            <block type="resolve/promo_checkoutButton"
+                   name="checkout.cart.methods.resolve.top"
+                   template="resolve/promo/checkout_button.phtml"
+                   after="-" />
+        </reference>
+        <reference name="checkout.cart.methods">
+            <block type="resolve/promo_checkoutButton"
+                   name="checkout.cart.methods.resolve.top"
+                   template="resolve/promo/checkout_button.phtml"
+                   after="checkout.cart.methods.onepage.bottom" />
+        </reference>
+        <reference name="checkout.cart.methods">
+            <block type="resolve/promo_asLowAs_checkout" name="as.low.as.pdp"
+                   template="resolve/promo/aslowas/checkout.phtml" before="-" />
+        </reference>
+    </checkout_cart_index>
+
+    <catalog_product_view>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name helper="resolve/promo_data/getPDPResolveJsScript" />
+            </action>
+        </reference>
+        <reference name="product.info.extrahint">
+            <block type="resolve/promo_asLowAs_product" name="as.low.as.pdp"
+                   template="resolve/promo/aslowas/product.phtml" after="-" />
+        </reference>
+    </catalog_product_view>
+    <catalog_category_layered>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name helper="resolve/promo_data/getPLPResolveJsScript" />
+            </action>
+        </reference>
+        <reference name="before_body_end">
+            <block type="core/template" name="resolve_plp_javascript" template="resolve/promo/aslowas/list.phtml"/>
+        </reference>
+    </catalog_category_layered>
+    <catalogsearch_result_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name helper="resolve/promo_data/getPLPResolveJsScript" />
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="resolve_plp_javascript" after="-" template="resolve/promo/aslowas/list.phtml"/>
+        </reference>
+    </catalogsearch_result_index>
+    <checkout_onepage_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name helper="resolve/getResolveCheckoutJsScript" />
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="resolve.js.checkout" after="-" template="resolve/resolve/checkout/review/opc.phtml"/>
+        </reference>
+    </checkout_onepage_index>
+    <checkout_onepage_review>
+        <reference name="checkout.onepage.review.button">
+            <action method="setTemplate"><template helper="resolve/getReviewButtonTemplate"><name>resolve/resolve/checkout/review/button.phtml</name><block>checkout.onepage.review.button</block></template></action>
+        </reference>
     </checkout_onepage_review>
-  
+    <onestepcheckout_index_index>
+        <reference name="content">
+            <block type="core/template" name="resolve.js.checkout" after="-" template="resolve/resolve/checkout/review/opc.phtml"/>
+        </reference>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name helper="resolve/getResolveCheckoutJsScript" />
+            </action>
+        </reference>
+    </onestepcheckout_index_index>
+    <iwd_opc_index_index> <!-- For IWD OPC extension -->
+        <reference name="content">
+            <block type="core/template" name="resolve.js.checkout" after="-" template="resolve/resolve/checkout/review/opc.phtml"/>
+        </reference>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name helper="resolve/getResolveCheckoutJsScript" />
+            </action>
+        </reference>
+    </iwd_opc_index_index>
+    <firecheckout_index_index> <!-- For TM Firecheckout extension -->
+        <reference name="content">
+            <block type="core/template" name="resolve.js.checkout" after="-" template="resolve/resolve/checkout/review/opc.phtml"/>
+        </reference>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name helper="resolve/getResolveCheckoutJsScript" />
+            </action>
+        </reference>
+    </firecheckout_index_index>
+    <aw_onestepcheckout_index_index> <!-- For AW OneStepCheckout extension -->
+        <reference name="content">
+            <block type="core/template" name="resolve.js.checkout" after="-" template="resolve/resolve/checkout/review/opc.phtml"/>
+        </reference>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name helper="resolve/getResolveCheckoutJsScript" />
+            </action>
+        </reference>
+    </aw_onestepcheckout_index_index>
+    <gomage_checkout_onepage_index> <!-- For GoMage checkout extension -->
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name helper="resolve/getResolveCheckoutJsScript" />
+            </action>
+            <block type="core/template" name="resolve.js.checkout" template="resolve/resolve/checkout/review/opc.phtml"/>
+        </reference>
+    </gomage_checkout_onepage_index>
+    <checkout_onepage_success> <!-- To add pixel for enhanced analytics -->
+        <reference name="head" before="-">
+            <block type="resolve/promo_pixel_confirm" name="resolve_pixel_javascript" template="resolve/promo/pixel/confirm.phtml"/>
+        </reference>
+    </checkout_onepage_success>
+    <checkout_multishipping_success translate="label"> <!-- To add pixel for enhanced analytics -->
+        <reference name="head" before="-">
+            <block type="resolve/promo_pixel_confirm" name="resolve_pixel_javascript" template="resolve/promo/pixel/confirm.phtml"/>
+        </reference>
+    </checkout_multishipping_success>
 </layout>

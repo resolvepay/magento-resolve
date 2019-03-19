@@ -1,0 +1,13 @@
+<?php
+    /** @var Resolve_Resolve_Block_Payment_Redirect $this **/
+    $order = $this->getOrder();
+    $paymentMethod = $order->getPayment()->getMethodInstance();
+?>
+<html>
+    <body>
+        <script type="text/javascript" src="<?= Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN)?>frontend/base/default/js/resolve/resolve.js"></script>
+        <script type="text/javascript">
+            window.resolve.checkout(<?php echo json_encode($paymentMethod->getCheckoutObject($order))?>);
+        </script>
+    </body>
+</html>
