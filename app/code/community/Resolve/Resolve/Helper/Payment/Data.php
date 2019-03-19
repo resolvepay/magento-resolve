@@ -22,28 +22,29 @@
 class Resolve_Resolve_Helper_Payment_Data extends Mage_Payment_Helper_Data
 {
     protected $_allRules = null;
-    
-    public function getStoreMethods($store = null, $quote = null)
+
+
+
+
+    public function validateStoreMethods($quote, array $methods)
     {
-        $methods = parent::getStoreMethods($store, $quote);
         if (!$quote){
             return $methods;
         }
         $address = $quote->getShippingAddress();
         foreach ($methods as $k => $method){
             foreach ($this->getRules($address) as $rule){
-               if ($rule->restrict($method)){
-                   if ($rule->validate($address)){
-                       unset($methods[$k]);
-                   }//if validate
-               }//if restrict
-            }//rules        
+                if ($rule->restrict($method)){
+                    if ($rule->validate($address)){
+                        unset($methods[$k]);
+                    }//if validate
+                }//if restrict
+            }//rules
         }//methods
         return $methods;
     }
     
-    public function getRules($address)
-    {
+    public function getRules($address){
         if (is_null($this->_allRules)){
             $this->_allRules = Mage::getModel('resolve/rule')
                 ->getCollection()
@@ -58,8 +59,7 @@ class Resolve_Resolve_Helper_Payment_Data extends Mage_Payment_Helper_Data
                 $rule->afterLoad(); 
             }
         }
-        
-        return  $this->_allRules;       
+        return  $this->_allRules;
     }
     
     protected function _isAdmin()

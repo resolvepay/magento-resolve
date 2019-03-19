@@ -1,5 +1,5 @@
 <?php
-class Resolve_Resolve_Adminhtml_RuleController extends Mage_Adminhtml_Controller_Action
+class Resolve_Resolve_Adminhtml_ResolveRuleController extends Mage_Adminhtml_Controller_Action
 {
     protected $_title     = 'Resolve Payment Restriction';
     protected $_modelName = 'rule';

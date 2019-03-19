@@ -50,7 +50,7 @@ class Resolve_Resolve_Model_Order_Observer_ApplyResolvePaymentMethod
     protected function _canApplyResolvePaymentMethod()
     {
         $canApply = Mage::helper('resolve')->getCheckoutSession()->getResolvePaymentFlag()
-                  && Mage::helper('resolve/promo_data')->isCheckoutButtonActive()
+//                  && Mage::helper('resolve/promo_data')->isCheckoutButtonActive()
                   && Mage::helper('resolve')->isResolvePaymentMethodAvailable();
         return  $canApply;
     }

@@ -36,7 +36,7 @@
 <config>
     <modules>
         <Resolve_Resolve>
-            <version>3.6.3</version>
+            <version>3.6.4</version>
         </Resolve_Resolve>
     </modules>
     <global>
@@ -44,21 +44,16 @@
             <resolve>
                 <class>Resolve_Resolve_Block</class>
             </resolve>
-            <catalog>
+            <checkout>
                 <rewrite>
-                    <product_list>Resolve_Resolve_Block_Product_List</product_list>
+                    <onepage_payment_methods>Resolve_Resolve_Block_Payment_Form_Container</onepage_payment_methods>
                 </rewrite>
-            </catalog>
+            </checkout>
         </blocks>
         <helpers>
             <resolve>
                 <class>Resolve_Resolve_Helper</class>
             </resolve>
-            <payment>
-                <rewrite>
-                    <data>Resolve_Resolve_Helper_Payment_Data</data>
-                </rewrite>
-            </payment>
         </helpers>
         <models>
             <resolve>
@@ -292,9 +287,9 @@
             <promo>
                 <children>
                     <resolve module="resolve" translate="title">
-                        <title>Manage Payment Restrictions Rules</title>
+                        <title>Manage Resolve Payment Restrictions Rules</title>
                         <sort_order>3</sort_order>
-                        <action>adminhtml/rule</action>
+                        <action>adminhtml/resolveRule</action>
                     </resolve>
                 </children>
             </promo>

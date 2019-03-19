@@ -175,21 +175,14 @@ class Resolve_Resolve_Model_Payment extends Mage_Payment_Model_Method_Abstract
     protected function _apiRequest($method, $path, $data = null, $storeId = null, $resourcePath = self::API_CHARGES_PATH)
     {
 
-//        $url = trim($this->getBaseApiUrl(), '/') . $resourcePath . $path;
-//        $url = trim($this->getBaseApiUrl(), '/') . $path;
-//        echo    $url;
         $url = $this->getBaseApiUrl() . $path;
-        echo    $url;
 
-//        $client = new Zend_Http_Client($url);
         $client = new Zend_Http_Client($url, array(
             'maxredirects' => 0,
             'timeout'      => 30));
         if ($method == Zend_Http_Client::POST && $data) {
             $json = json_encode($data);
-            print_r($json);
             $client->setRawData($json, 'application/json');
-//                    die();
         }
 
         $helperClass = $this->_resolveHelperClass;
@@ -200,7 +193,6 @@ class Resolve_Resolve_Model_Payment extends Mage_Payment_Model_Method_Abstract
         if ($method == Zend_Http_Client::POST && !$data) {
           return true;
         }
-        print_r($rawResult);
         try {
             $retJson = Zend_Json::decode($rawResult, Zend_Json::TYPE_ARRAY);
         } catch (Zend_Json_Exception $e) {
@@ -212,8 +204,7 @@ class Resolve_Resolve_Model_Payment extends Mage_Payment_Model_Method_Abstract
             throw new Resolve_Resolve_Exception(Mage::helper('resolve')->__('Resolve error code:'.
                 $retJson['status_code'] . ' error: '. $retJson['message']));
         }
-        print_r($retJson);
-//        die('here');
+
         return $retJson;
     }
 
