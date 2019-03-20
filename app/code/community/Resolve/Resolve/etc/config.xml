@@ -36,7 +36,7 @@
 <config>
     <modules>
         <Resolve_Resolve>
-            <version>3.6.4</version>
+            <version>3.6.5</version>
         </Resolve_Resolve>
     </modules>
     <global>
@@ -159,15 +159,6 @@
                     </resolve_resolve_model_pre_order_observer>
                 </observers>
             </checkout_type_onepage_save_order>
-            <controller_action_layout_generate_xml_before>
-                <observers>
-                    <resolve_resolvepromo>
-                        <type>singleton</type>
-                        <class>resolve/promo_observer</class>
-                        <method>layoutGenerateBlocksBefore</method>
-                    </resolve_resolvepromo>
-                </observers>
-            </controller_action_layout_generate_xml_before>
             <controller_action_postdispatch_checkout_onepage_saveBilling>
                 <observers>
                     <resolve_checkoutbutton_proceed>
