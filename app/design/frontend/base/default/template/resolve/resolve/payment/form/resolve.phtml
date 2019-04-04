@@ -18,7 +18,7 @@
 <ul class="form-list resolve" id="payment_form_resolve" style="display:none;">
     <li class="form-alt">
             <div class="resolve_payment_info">
-                <?php if ($helper->isPlainDescriptionTextEnabled()): ?>
+                <?php if (!$helper->isPlainDescriptionTextEnabled()): ?>
                     <?= $helper->getDescriptionHtmlAfter();?>
                 <?php else: ?>
                     <p><?php echo $this->__('You will be redirected to Resolve to securely complete your purchase. Just fill out a few pieces of basic information and get a real-time decision. Checking your eligibility won\'t affect your credit score.'); ?></p>

@@ -29,7 +29,7 @@ class Resolve_Resolve_Helper_Mfp extends Mage_Core_Helper_Abstract
     /**
      * Promo ID default value
      */
-    const PROMO_RESOLVE_PROMO_ID_VALUE_DEFAULT = 'resolvepromo/as_low_as/promo_id_value_default';
+//    const PROMO_RESOLVE_PROMO_ID_VALUE_DEFAULT = 'resolvepromo/as_low_as/promo_id_value_default';
 
     /**
      * MFP value
@@ -144,10 +144,10 @@ class Resolve_Resolve_Helper_Mfp extends Mage_Core_Helper_Abstract
      * @param Mage_Core_Model_Store $store
      * @return string
      */
-    public function getPromoIdDefault($store = null)
-    {
-        return Mage::getStoreConfig(self::PROMO_RESOLVE_PROMO_ID_VALUE_DEFAULT, $store);
-    }
+//    public function getPromoIdDefault($store = null)
+//    {
+//        return Mage::getStoreConfig(self::PROMO_RESOLVE_PROMO_ID_VALUE_DEFAULT, $store);
+//    }
 
     /**
      * Get PromoId for date range

@@ -50,9 +50,9 @@ class Resolve_Resolve_Model_Order_Observer_AfterOrderSuccess
         if (empty($orderIds) || !is_array($orderIds)) {
             return;
         }
-        $block = Mage::app()->getFrontController()->getAction()->getLayout()->getBlock('resolve_pixel_javascript');
-        if ($block) {
-            $block->setOrderIds($orderIds);
-        }
+//        $block = Mage::app()->getFrontController()->getAction()->getLayout()->getBlock('resolve_pixel_javascript');
+//        if ($block) {
+//            $block->setOrderIds($orderIds);
+//        }
     }
 }
