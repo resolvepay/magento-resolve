@@ -34,85 +34,85 @@
   -->
 
 <layout>
-    <default>
-        <reference name="head">
-            <action method="addItem">
-                <type>skin_js</type>
-                <name>js/resolve/promos.js</name>
-            </action>
-            <block type="core/text" name="resolve.cdn.javascript">
-                <action method="setText">
-                    <text helper="resolve/getResolveJs" />
-                </action>
-            </block>
-            <reference name="after_body_start">
-                <block type="resolve/promo_pixel_code" name="resolve_pixel_code">
-                    <action method="setTemplate" ifconfig="resolvepromo/pixel/enabled">
-                        <template>resolve/promo/pixel/code.phtml</template>
-                    </action>
-                </block>
-            </reference>
-        </reference>
-    </default>
-    <checkout_cart_index>
-        <reference name="head">
-            <action method="addItem">
-                <type>skin_js</type>
-                <name helper="resolve/promo_data/getCheckoutResolveJsScript" />
-            </action>
-        </reference>
-        <reference name="checkout.cart.top_methods">
-            <block type="resolve/promo_checkoutButton"
-                   name="checkout.cart.methods.resolve.top"
-                   template="resolve/promo/checkout_button.phtml"
-                   after="-" />
-        </reference>
-        <reference name="checkout.cart.methods">
-            <block type="resolve/promo_checkoutButton"
-                   name="checkout.cart.methods.resolve.top"
-                   template="resolve/promo/checkout_button.phtml"
-                   after="checkout.cart.methods.onepage.bottom" />
-        </reference>
-        <reference name="checkout.cart.methods">
-            <block type="resolve/promo_asLowAs_checkout" name="as.low.as.pdp"
-                   template="resolve/promo/aslowas/checkout.phtml" before="-" />
-        </reference>
-    </checkout_cart_index>
+    <!--<default>-->
+        <!--<reference name="head">-->
+            <!--<action method="addItem">-->
+                <!--<type>skin_js</type>-->
+                <!--<name>js/resolve/promos.js</name>-->
+            <!--</action>-->
+            <!--<block type="core/text" name="resolve.cdn.javascript">-->
+                <!--<action method="setText">-->
+                    <!--<text helper="resolve/getResolveJs" />-->
+                <!--</action>-->
+            <!--</block>-->
+            <!--<reference name="after_body_start">-->
+                <!--<block type="resolve/promo_pixel_code" name="resolve_pixel_code">-->
+                    <!--<action method="setTemplate" ifconfig="resolvepromo/pixel/enabled">-->
+                        <!--<template>resolve/promo/pixel/code.phtml</template>-->
+                    <!--</action>-->
+                <!--</block>-->
+            <!--</reference>-->
+        <!--</reference>-->
+    <!--</default>-->
+    <!--<checkout_cart_index>-->
+        <!--<reference name="head">-->
+            <!--<action method="addItem">-->
+                <!--<type>skin_js</type>-->
+                <!--<name helper="resolve/promo_data/getCheckoutResolveJsScript" />-->
+            <!--</action>-->
+        <!--</reference>-->
+        <!--<reference name="checkout.cart.top_methods">-->
+            <!--<block type="resolve/promo_checkoutButton"-->
+                   <!--name="checkout.cart.methods.resolve.top"-->
+                   <!--template="resolve/promo/checkout_button.phtml"-->
+                   <!--after="-" />-->
+        <!--</reference>-->
+        <!--<reference name="checkout.cart.methods">-->
+            <!--<block type="resolve/promo_checkoutButton"-->
+                   <!--name="checkout.cart.methods.resolve.top"-->
+                   <!--template="resolve/promo/checkout_button.phtml"-->
+                   <!--after="checkout.cart.methods.onepage.bottom" />-->
+        <!--</reference>-->
+        <!--<reference name="checkout.cart.methods">-->
+            <!--<block type="resolve/promo_asLowAs_checkout" name="as.low.as.pdp"-->
+                   <!--template="resolve/promo/aslowas/checkout.phtml" before="-" />-->
+        <!--</reference>-->
+    <!--</checkout_cart_index>-->
 
-    <catalog_product_view>
-        <reference name="head">
-            <action method="addItem">
-                <type>skin_js</type>
-                <name helper="resolve/promo_data/getPDPResolveJsScript" />
-            </action>
-        </reference>
-        <reference name="product.info.extrahint">
-            <block type="resolve/promo_asLowAs_product" name="as.low.as.pdp"
-                   template="resolve/promo/aslowas/product.phtml" after="-" />
-        </reference>
-    </catalog_product_view>
-    <catalog_category_layered>
-        <reference name="head">
-            <action method="addItem">
-                <type>skin_js</type>
-                <name helper="resolve/promo_data/getPLPResolveJsScript" />
-            </action>
-        </reference>
-        <reference name="before_body_end">
-            <block type="core/template" name="resolve_plp_javascript" template="resolve/promo/aslowas/list.phtml"/>
-        </reference>
-    </catalog_category_layered>
-    <catalogsearch_result_index>
-        <reference name="head">
-            <action method="addItem">
-                <type>skin_js</type>
-                <name helper="resolve/promo_data/getPLPResolveJsScript" />
-            </action>
-        </reference>
-        <reference name="content">
-            <block type="core/template" name="resolve_plp_javascript" after="-" template="resolve/promo/aslowas/list.phtml"/>
-        </reference>
-    </catalogsearch_result_index>
+    <!--<catalog_product_view>-->
+        <!--<reference name="head">-->
+            <!--<action method="addItem">-->
+                <!--<type>skin_js</type>-->
+                <!--<name helper="resolve/promo_data/getPDPResolveJsScript" />-->
+            <!--</action>-->
+        <!--</reference>-->
+        <!--<reference name="product.info.extrahint">-->
+            <!--<block type="resolve/promo_asLowAs_product" name="as.low.as.pdp"-->
+                   <!--template="resolve/promo/aslowas/product.phtml" after="-" />-->
+        <!--</reference>-->
+    <!--</catalog_product_view>-->
+    <!--<catalog_category_layered>-->
+        <!--<reference name="head">-->
+            <!--<action method="addItem">-->
+                <!--<type>skin_js</type>-->
+                <!--<name helper="resolve/promo_data/getPLPResolveJsScript" />-->
+            <!--</action>-->
+        <!--</reference>-->
+        <!--<reference name="before_body_end">-->
+            <!--<block type="core/template" name="resolve_plp_javascript" template="resolve/promo/aslowas/list.phtml"/>-->
+        <!--</reference>-->
+    <!--</catalog_category_layered>-->
+    <!--<catalogsearch_result_index>-->
+        <!--<reference name="head">-->
+            <!--<action method="addItem">-->
+                <!--<type>skin_js</type>-->
+                <!--<name helper="resolve/promo_data/getPLPResolveJsScript" />-->
+            <!--</action>-->
+        <!--</reference>-->
+        <!--<reference name="content">-->
+            <!--<block type="core/template" name="resolve_plp_javascript" after="-" template="resolve/promo/aslowas/list.phtml"/>-->
+        <!--</reference>-->
+    <!--</catalogsearch_result_index>-->
     <checkout_onepage_index>
         <reference name="head">
             <action method="addItem">
@@ -182,14 +182,16 @@
             <block type="core/template" name="resolve.js.checkout" template="resolve/resolve/checkout/review/opc.phtml"/>
         </reference>
     </gomage_checkout_onepage_index>
-    <checkout_onepage_success> <!-- To add pixel for enhanced analytics -->
-        <reference name="head" before="-">
-            <block type="resolve/promo_pixel_confirm" name="resolve_pixel_javascript" template="resolve/promo/pixel/confirm.phtml"/>
-        </reference>
-    </checkout_onepage_success>
-    <checkout_multishipping_success translate="label"> <!-- To add pixel for enhanced analytics -->
-        <reference name="head" before="-">
-            <block type="resolve/promo_pixel_confirm" name="resolve_pixel_javascript" template="resolve/promo/pixel/confirm.phtml"/>
-        </reference>
-    </checkout_multishipping_success>
+    <!--<checkout_onepage_success>-->
+        <!-- To add pixel for enhanced analytics -->
+        <!--<reference name="head" before="-">-->
+            <!--<block type="resolve/promo_pixel_confirm" name="resolve_pixel_javascript" template="resolve/promo/pixel/confirm.phtml"/>-->
+        <!--</reference>-->
+    <!--</checkout_onepage_success>-->
+    <!--<checkout_multishipping_success translate="label"> -->
+         <!--To add pixel for enhanced analytics -->
+        <!--<reference name="head" before="-">-->
+            <!--<block type="resolve/promo_pixel_confirm" name="resolve_pixel_javascript" template="resolve/promo/pixel/confirm.phtml"/>-->
+        <!--</reference>-->
+    <!--</checkout_multishipping_success>-->
 </layout>
