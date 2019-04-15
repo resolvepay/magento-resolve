@@ -70,7 +70,7 @@ class Resolve_Resolve_Model_Order_Observer
      * @param Mage_Sales_Model_Order $order
      * @param Mage_Sales_Model_Quote $quote
      */
-    protected function _callToPreOrderActionAndExit($order, $quote)
+    protected function _callToPreOrderActionAndExit($order, $quote, $observer)
     {
         $request = Mage::app()->getRequest();
         $request->setParams(array('order' => $order, 'quote' => $quote))
@@ -81,6 +81,10 @@ class Resolve_Resolve_Model_Order_Observer
         $router = $this->_getRoute('standard');
         $router->match($request);
         Mage::app()->getResponse()->sendResponse();
+//        $controller = $observer->getEvent()->getControllerAction();
+//        $this->setFlag('', self::FLAG_NO_POST_DISPATCH, 1);
+//        $controller->setFlag('', self::FLAG_NO_DISPATCH, 1);
+//        $controller->setFlag('', self::FLAG_NO_POST_DISPATCH, 1);
         exit();
     }
 
@@ -117,7 +121,7 @@ class Resolve_Resolve_Model_Order_Observer
                         'requested_action' => $request->getRequestedActionName()
                     );
                     Mage::helper('resolve')->getCheckoutSession()->setResolveOrderRequest(serialize($orderRequest));
-                    $this->_callToPreOrderActionAndExit($order, $quote);
+                    $this->_callToPreOrderActionAndExit($order, $quote, $observer);
                 }
             } elseif ($this->_isCreateOrderBeforeConf($methodInst)) {
                 Mage::helper('resolve')->getCheckoutSession()->setResolveOrderRequest(null);
@@ -156,83 +160,84 @@ class Resolve_Resolve_Model_Order_Observer
      */
     public function preDispatchSaveOrderAction(Varien_Event_Observer $observer)
     {
-        $payment = Mage::helper('resolve')->getCheckoutSession()->getQuote()->getPayment();
-        $paymentMethod = $payment->getMethod();
-        if (Mage::helper('resolve')->isCheckoutFlowTypeModal() && $paymentMethod == Resolve_Resolve_Model_Payment::METHOD_CODE) {
-            /* @var $controller Mage_Core_Controller_Front_Action */
-            $controller = $observer->getEvent()->getControllerAction();
-            if($paymentMethod){
-                $methodInst = $payment->getMethodInstance();
-            } else {
-                $dataSavePayment = $controller->getRequest()->getPost('payment', array());
-                try {
-                    Mage::getSingleton('checkout/type_onepage')->savePayment($dataSavePayment);
-                    $payment = Mage::helper('resolve')->getCheckoutSession()->getQuote()->getPayment();
-                    $paymentMethod = $payment->getMethod();
-                    $methodInst = $payment->getMethodInstance();
-                } catch (Exception $e) {
-                    $message = $e->getMessage();
-                    $controller->setFlag('', Mage_Core_Controller_Front_Action::FLAG_NO_DISPATCH, true);
-                    $response = array('error' => -1, 'message' => $message);
-                    $controller->getResponse()->setBody(Mage::helper('core')->jsonEncode($response));
-                    $controller->getRequest()->setDispatched(true);
-                    return;
-                }
-            }
-            if (!Mage::helper('resolve')->getResolveTokenCode()) {
-                $requiredAgreements = Mage::helper('checkout')->getRequiredAgreementIds();
-                if ($requiredAgreements && $controller->getRequest()->getPost('agreement', array())) {
-                    $postedAgreements = array_keys($controller->getRequest()->getPost('agreement', array()));
-                    $diff = array_diff($requiredAgreements, $postedAgreements);
-                    if ($diff) {
-                        $result['success'] = false;
-                        $result['error'] = true;
-                        $result['error_messages'] = 'Please agree to all the terms and conditions before placing the order.';
-                        $controller->setFlag('', Mage_Core_Controller_Front_Action::FLAG_NO_DISPATCH, true);
-                        $controller->getResponse()->setBody(
-                            Mage::helper('core')->jsonEncode($result)
-                        );
-                        $controller->getRequest()->setDispatched(true);
-                        return;
-                    }
-                }
-
-                $data = $controller->getRequest()->getPost('payment', array());
-                if ($data) {
-                    $data['checks'] = Mage_Payment_Model_Method_Abstract::CHECK_USE_CHECKOUT
-                        | Mage_Payment_Model_Method_Abstract::CHECK_USE_FOR_COUNTRY
-                        | Mage_Payment_Model_Method_Abstract::CHECK_USE_FOR_CURRENCY
-                        | Mage_Payment_Model_Method_Abstract::CHECK_ORDER_TOTAL_MIN_MAX
-                        | Mage_Payment_Model_Method_Abstract::CHECK_ZERO_TOTAL;
-                    Mage::helper('resolve')->getCheckoutSession()->getQuote()->getPayment()->importData($data);
-                }
-
-                if ($controller->getRequest()->getPost('newsletter')) {
-                    Mage::getSingleton('checkout/session')
-                        ->setNewsletterSubsribed(true)
-                        ->setNewsletterEmail(
-                            Mage::helper('resolve')->getCheckoutSession()->getQuote()->getCustomerEmail()
-                        );
-                }
-                #ok record the current controller that we are using...
-                $request = Mage::app()->getRequest();
-                $post = (Mage::app()->getRequest()->getPost()) ? Mage::app()->getRequest()->getPost() : null;
-                $orderRequest = array('action' => $request->getActionName(),
-                    'controller' => $request->getControllerName(),
-                    'module' => $request->getModuleName(),
-                    'params' => $request->getParams(),
-                    'method' => $request->getMethod(),
-                    'xhr' => $request->isXmlHttpRequest(),
-                    'POST' => $post, //need post for some cross site issues
-                    'quote_id' => Mage::helper('resolve')->getCheckoutSession()->getQuote()->getId()
-                );
-                Mage::helper('resolve')->getCheckoutSession()->setResolveOrderRequest(serialize($orderRequest));
-                $controller->setFlag('', Mage_Core_Controller_Front_Action::FLAG_NO_DISPATCH, true);
-                $controller->getRequest()->setDispatched(true);
-                return;
-            } else {
-                $methodInst->setResolveCheckoutToken(Mage::helper('resolve')->getResolveTokenCode());
-            }
-        }
+        return this;
+//        $payment = Mage::helper('resolve')->getCheckoutSession()->getQuote()->getPayment();
+//        $paymentMethod = $payment->getMethod();
+//        if (Mage::helper('resolve')->isCheckoutFlowTypeModal() && $paymentMethod == Resolve_Resolve_Model_Payment::METHOD_CODE) {
+//            /* @var $controller Mage_Core_Controller_Front_Action */
+//            $controller = $observer->getEvent()->getControllerAction();
+//            if($paymentMethod){
+//                $methodInst = $payment->getMethodInstance();
+//            } else {
+//                $dataSavePayment = $controller->getRequest()->getPost('payment', array());
+//                try {
+//                    Mage::getSingleton('checkout/type_onepage')->savePayment($dataSavePayment);
+//                    $payment = Mage::helper('resolve')->getCheckoutSession()->getQuote()->getPayment();
+//                    $paymentMethod = $payment->getMethod();
+//                    $methodInst = $payment->getMethodInstance();
+//                } catch (Exception $e) {
+//                    $message = $e->getMessage();
+//                    $controller->setFlag('', Mage_Core_Controller_Front_Action::FLAG_NO_DISPATCH, true);
+//                    $response = array('error' => -1, 'message' => $message);
+//                    $controller->getResponse()->setBody(Mage::helper('core')->jsonEncode($response));
+//                    $controller->getRequest()->setDispatched(true);
+//                    return;
+//                }
+//            }
+//            if (!Mage::helper('resolve')->getResolveTokenCode()) {
+//                $requiredAgreements = Mage::helper('checkout')->getRequiredAgreementIds();
+//                if ($requiredAgreements && $controller->getRequest()->getPost('agreement', array())) {
+//                    $postedAgreements = array_keys($controller->getRequest()->getPost('agreement', array()));
+//                    $diff = array_diff($requiredAgreements, $postedAgreements);
+//                    if ($diff) {
+//                        $result['success'] = false;
+//                        $result['error'] = true;
+//                        $result['error_messages'] = 'Please agree to all the terms and conditions before placing the order.';
+//                        $controller->setFlag('', Mage_Core_Controller_Front_Action::FLAG_NO_DISPATCH, true);
+//                        $controller->getResponse()->setBody(
+//                            Mage::helper('core')->jsonEncode($result)
+//                        );
+//                        $controller->getRequest()->setDispatched(true);
+//                        return;
+//                    }
+//                }
+//
+//                $data = $controller->getRequest()->getPost('payment', array());
+//                if ($data) {
+//                    $data['checks'] = Mage_Payment_Model_Method_Abstract::CHECK_USE_CHECKOUT
+//                        | Mage_Payment_Model_Method_Abstract::CHECK_USE_FOR_COUNTRY
+//                        | Mage_Payment_Model_Method_Abstract::CHECK_USE_FOR_CURRENCY
+//                        | Mage_Payment_Model_Method_Abstract::CHECK_ORDER_TOTAL_MIN_MAX
+//                        | Mage_Payment_Model_Method_Abstract::CHECK_ZERO_TOTAL;
+//                    Mage::helper('resolve')->getCheckoutSession()->getQuote()->getPayment()->importData($data);
+//                }
+//
+//                if ($controller->getRequest()->getPost('newsletter')) {
+//                    Mage::getSingleton('checkout/session')
+//                        ->setNewsletterSubsribed(true)
+//                        ->setNewsletterEmail(
+//                            Mage::helper('resolve')->getCheckoutSession()->getQuote()->getCustomerEmail()
+//                        );
+//                }
+//                #ok record the current controller that we are using...
+//                $request = Mage::app()->getRequest();
+//                $post = (Mage::app()->getRequest()->getPost()) ? Mage::app()->getRequest()->getPost() : null;
+//                $orderRequest = array('action' => $request->getActionName(),
+//                    'controller' => $request->getControllerName(),
+//                    'module' => $request->getModuleName(),
+//                    'params' => $request->getParams(),
+//                    'method' => $request->getMethod(),
+//                    'xhr' => $request->isXmlHttpRequest(),
+//                    'POST' => $post, //need post for some cross site issues
+//                    'quote_id' => Mage::helper('resolve')->getCheckoutSession()->getQuote()->getId()
+//                );
+//                Mage::helper('resolve')->getCheckoutSession()->setResolveOrderRequest(serialize($orderRequest));
+//                $controller->setFlag('', Mage_Core_Controller_Front_Action::FLAG_NO_DISPATCH, true);
+//                $controller->getRequest()->setDispatched(true);
+//                return;
+//            } else {
+//                $methodInst->setResolveCheckoutToken(Mage::helper('resolve')->getResolveTokenCode());
+//            }
+//        }
     }
 }
