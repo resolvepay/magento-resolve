@@ -32,6 +32,7 @@ class Resolve_Resolve_Model_Compatibility_Tool_Event
      */
     public function getObserverResolveEvents()
     {
+
         return array(
             'checkout_type_onepage_save_order',
             'checkout_type_onepage_save_order_after'
