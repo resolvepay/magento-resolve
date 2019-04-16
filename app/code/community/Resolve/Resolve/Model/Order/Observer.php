@@ -15,6 +15,30 @@
  * @copyright   Copyright (c) 2014 One Pica, Inc. (http://www.onepica.com)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
+
+class Resolve_Order_Save_Redirector extends Mage_Core_Controller_Varien_Exception
+{
+    public $order;
+    public $quote;
+    public function __construct($order, $quote)
+    {
+        $this->order = $order;
+        $this->quote = $quote;
+    }
+    public function __tostring()
+    {
+        throw $this;
+    }
+    public function getResultFlags()
+    {
+        return array();
+    }
+    public function getResultCallback()
+    {
+        return array(Mage_Core_Controller_Varien_Exception::RESULT_FORWARD, array("renderPreOrder", "payment", "resolve", array("order"=>$this->order, "quote"=>$this->quote)));
+    }
+}
+
 class Resolve_Resolve_Model_Order_Observer
 {
     private $_isResolveOrderSaveAfter = false;
@@ -70,23 +94,20 @@ class Resolve_Resolve_Model_Order_Observer
      * @param Mage_Sales_Model_Order $order
      * @param Mage_Sales_Model_Quote $quote
      */
-    protected function _callToPreOrderActionAndExit($order, $quote, $observer)
-    {
-        $request = Mage::app()->getRequest();
-        $request->setParams(array('order' => $order, 'quote' => $quote))
-            ->setControllerName('payment')
-            ->setModuleName('resolve')
-            ->setActionName('renderPreOrder')
-            ->setDispatched(false);
-        $router = $this->_getRoute('standard');
-        $router->match($request);
-        Mage::app()->getResponse()->sendResponse();
-//        $controller = $observer->getEvent()->getControllerAction();
-//        $this->setFlag('', self::FLAG_NO_POST_DISPATCH, 1);
-//        $controller->setFlag('', self::FLAG_NO_DISPATCH, 1);
-//        $controller->setFlag('', self::FLAG_NO_POST_DISPATCH, 1);
-        exit();
-    }
+//    protected function _callToPreOrderActionAndExit($order, $quote, $observer)
+//    {
+//        $request = Mage::app()->getRequest();
+//        $request->setParams(array('order' => $order, 'quote' => $quote))
+//            ->setControllerName('payment')
+//            ->setModuleName('resolve')
+//            ->setActionName('renderPreOrder')
+//            ->setDispatched(false);
+//        $router = $this->_getRoute('standard');
+//        $router->match($request);
+//        Mage::app()->getResponse()->sendResponse();
+//
+//        exit();
+//    }
 
     /**
      * Pre order to be executed only for redirect checkout flow type
@@ -121,7 +142,7 @@ class Resolve_Resolve_Model_Order_Observer
                         'requested_action' => $request->getRequestedActionName()
                     );
                     Mage::helper('resolve')->getCheckoutSession()->setResolveOrderRequest(serialize($orderRequest));
-                    $this->_callToPreOrderActionAndExit($order, $quote, $observer);
+                    throw new Resolve_Order_Save_Redirector($order, $quote);
                 }
             } elseif ($this->_isCreateOrderBeforeConf($methodInst)) {
                 Mage::helper('resolve')->getCheckoutSession()->setResolveOrderRequest(null);
