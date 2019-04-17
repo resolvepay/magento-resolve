@@ -16,28 +16,6 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-class Resolve_Order_Save_Redirector extends Mage_Core_Controller_Varien_Exception
-{
-    public $order;
-    public $quote;
-    public function __construct($order, $quote)
-    {
-        $this->order = $order;
-        $this->quote = $quote;
-    }
-    public function __tostring()
-    {
-        throw $this;
-    }
-    public function getResultFlags()
-    {
-        return array();
-    }
-    public function getResultCallback()
-    {
-        return array(Mage_Core_Controller_Varien_Exception::RESULT_FORWARD, array("renderPreOrder", "payment", "resolve", array("order"=>$this->order, "quote"=>$this->quote)));
-    }
-}
 
 class Resolve_Resolve_Model_Order_Observer
 {
@@ -142,7 +120,7 @@ class Resolve_Resolve_Model_Order_Observer
                         'requested_action' => $request->getRequestedActionName()
                     );
                     Mage::helper('resolve')->getCheckoutSession()->setResolveOrderRequest(serialize($orderRequest));
-                    throw new Resolve_Order_Save_Redirector($order, $quote);
+                    throw new Resolve_Resolve_Model_Order_Save_Redirector($order, $quote);
                 }
             } elseif ($this->_isCreateOrderBeforeConf($methodInst)) {
                 Mage::helper('resolve')->getCheckoutSession()->setResolveOrderRequest(null);
