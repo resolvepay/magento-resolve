@@ -36,7 +36,7 @@
 <config>
     <modules>
         <Resolve_Resolve>
-            <version>3.6.9</version>
+            <version>3.6.10</version>
         </Resolve_Resolve>
     </modules>
     <global>
