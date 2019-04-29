@@ -24,7 +24,7 @@ class Resolve_Resolve_Model_Credential_Sandbox extends Resolve_Resolve_Model_Cre
     /**
      * Payment resolve api url
      */
-    const PAYMENT_RESOLVE_API_URL = 'https://app-sandbox.paywithresolve.com/api';
+    const PAYMENT_RESOLVE_API_URL = 'https://app-sandbox.resolvepay.com/api';
 
     /**
      * Payment resolve api key
