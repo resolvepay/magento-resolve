@@ -24,11 +24,7 @@ class Resolve_Resolve_Model_Credential_Production extends Resolve_Resolve_Model_
     /**
      * Payment resolve api url
      */
-<<<<<<< HEAD
     const PAYMENT_RESOLVE_API_URL = 'https://app.resolvepay.com/api';
-=======
-    const PAYMENT_RESOLVE_API_URL = 'http://api.resolvepay.com';
->>>>>>> d956e8ba9041c4792c80701bb2d61875ee54a7c9
 
     /**
      * Payment resolve api key

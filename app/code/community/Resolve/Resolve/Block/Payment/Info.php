@@ -20,11 +20,7 @@ class Resolve_Resolve_Block_Payment_Info extends Mage_Payment_Block_Info
     /**
      * Url of site
      */
-<<<<<<< HEAD
     const RESOLVE_SITE_URL = 'https://www.resolvepay.com/';
-=======
-    const RESOLVE_SITE_URL = 'https://www.paywithresolve.com/';
->>>>>>> d956e8ba9041c4792c80701bb2d61875ee54a7c9
 
     /**
      * Set custom template
