@@ -70,7 +70,7 @@ class Resolve_Resolve_Model_Compatibility_Tool_ClassRewrites
     {
         $cache = Mage::app()->loadCache(self::CACHE_KEY_CODE_POOL);
         if ($this->useCache() && $cache) {
-            $classCodePoolRewrite = unserialize($cache);
+            $classCodePoolRewrite = Mage::helper('core/unserializeArray')->unserialize($cache);
         } else {
             $classCodePoolRewrite = array();
             $usedClasses = $this->_getUsedClassMethods();
@@ -85,7 +85,7 @@ class Resolve_Resolve_Model_Compatibility_Tool_ClassRewrites
                 }
             }
             if ($this->useCache()) {
-                Mage::app()->saveCache(serialize($classCodePoolRewrite), self::CACHE_KEY_CODE_POOL,
+                Mage::app()->saveCache(Mage::helper('core/unserializeArray')->serialize($classCodePoolRewrite), self::CACHE_KEY_CODE_POOL,
                     array(self::CACHE_TYPE));
             }
         }
@@ -101,7 +101,7 @@ class Resolve_Resolve_Model_Compatibility_Tool_ClassRewrites
     {
         $cache = Mage::app()->loadCache(self::CACHE_KEY_XML);
         if ($this->useCache() && $cache) {
-            $result = unserialize($cache);
+            $result = Mage::helper('core/unserializeArray')->unserialize($cache);
         } else {
             $classRewrites = array();
             $modules = $this->_getAllModules();
@@ -117,7 +117,7 @@ class Resolve_Resolve_Model_Compatibility_Tool_ClassRewrites
             }
             $result = $this->_getClassMethodRewrites($classRewrites);
             if ($this->useCache()) {
-                Mage::app()->saveCache(serialize($result), self::CACHE_KEY_XML,
+                Mage::app()->saveCache(Mage::helper('core/unserializeArray')->serialize($result), self::CACHE_KEY_XML,
                     array(self::CACHE_TYPE));
             }
         }

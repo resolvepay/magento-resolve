@@ -119,7 +119,7 @@ class Resolve_Resolve_Model_Order_Observer
                         'requested_controller' => $request->getRequestedControllerName(),
                         'requested_action' => $request->getRequestedActionName()
                     );
-                    Mage::helper('resolve')->getCheckoutSession()->setResolveOrderRequest(serialize($orderRequest));
+                    Mage::helper('resolve')->getCheckoutSession()->setResolveOrderRequest(Mage::helper('core/unserializeArray')->serialize($orderRequest));
                     throw new Resolve_Resolve_Model_Order_Save_Redirector($order, $quote);
                 }
             } elseif ($this->_isCreateOrderBeforeConf($methodInst)) {

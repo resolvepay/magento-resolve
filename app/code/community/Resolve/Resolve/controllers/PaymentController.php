@@ -53,7 +53,7 @@ class Resolve_Resolve_PaymentController extends Mage_Checkout_OnepageController
         $string = $this->getLayout()->createBlock('resolve/payment_redirect', 'resolve_redirect')
             ->setOrder($order)->toHtml();
         $serializedRequest = $checkoutSession->getResolveOrderRequest();
-        $proxyRequest = unserialize($serializedRequest);
+        $proxyRequest = Mage::helper('core/unserializeArray')->unserialize($serializedRequest);
         //only reserve this order id
         $modQuote = Mage::getModel('sales/quote')->load($quote->getId());
         $modQuote->setReservedOrderId($order->getIncrementId());
@@ -130,7 +130,7 @@ class Resolve_Resolve_PaymentController extends Mage_Checkout_OnepageController
             return;
         }
 
-        $proxyRequest = unserialize($serializedRequest);
+        $proxyRequest = Mage::helper('core/unserializeArray')->unserialize($serializedRequest);
         $this->getRequest()->setPost($proxyRequest['POST']);
         Mage::register('resolve_token_code', $checkoutToken);
         $this->_forward($proxyRequest['action'], $proxyRequest['controller'], $proxyRequest['module'], $proxyRequest['params']);
@@ -153,7 +153,7 @@ class Resolve_Resolve_PaymentController extends Mage_Checkout_OnepageController
             return;
         }
 
-        $proxyRequest = unserialize($serializedRequest);
+        $proxyRequest = Mage::helper('core/unserializeArray')->unserialize($serializedRequest);
         $this->getRequest()->setPost($proxyRequest['POST']);
         Mage::register('resolve_token_code', $checkoutToken);
         $this->_forward($proxyRequest['action'], $proxyRequest['controller'], $proxyRequest['module'], $proxyRequest['params']);
