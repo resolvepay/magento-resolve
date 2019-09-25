@@ -107,7 +107,7 @@ class Resolve_Resolve_Model_Compatibility_Tool_Compiler extends Resolve_Resolve_
                 }
             }
             if ($this->useCache()) {
-                Mage::app()->saveCache(Mage::helper('core/unserializeArray')->serialize($controllersCompilerProblems),
+                Mage::app()->saveCache(serialize($controllersCompilerProblems),
                     self::CACHE_KEY, array(self::CACHE_TYPE)
                 );
             }

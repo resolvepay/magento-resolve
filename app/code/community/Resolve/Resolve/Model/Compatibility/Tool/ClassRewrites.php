@@ -85,7 +85,7 @@ class Resolve_Resolve_Model_Compatibility_Tool_ClassRewrites
                 }
             }
             if ($this->useCache()) {
-                Mage::app()->saveCache(Mage::helper('core/unserializeArray')->serialize($classCodePoolRewrite), self::CACHE_KEY_CODE_POOL,
+                Mage::app()->saveCache(serialize($classCodePoolRewrite), self::CACHE_KEY_CODE_POOL,
                     array(self::CACHE_TYPE));
             }
         }
@@ -117,7 +117,7 @@ class Resolve_Resolve_Model_Compatibility_Tool_ClassRewrites
             }
             $result = $this->_getClassMethodRewrites($classRewrites);
             if ($this->useCache()) {
-                Mage::app()->saveCache(Mage::helper('core/unserializeArray')->serialize($result), self::CACHE_KEY_XML,
+                Mage::app()->saveCache(serialize($result), self::CACHE_KEY_XML,
                     array(self::CACHE_TYPE));
             }
         }

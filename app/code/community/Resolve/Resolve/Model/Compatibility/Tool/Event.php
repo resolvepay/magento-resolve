@@ -92,7 +92,7 @@ class Resolve_Resolve_Model_Compatibility_Tool_Event
                 }
             }
             if ($this->useCache()) {
-                Mage::app()->saveCache(Mage::helper('core/unserializeArray')->serialize($declarationConflicts), self::CACHE_KEY, array(self::CACHE_TYPE));
+                Mage::app()->saveCache(serialize($declarationConflicts), self::CACHE_KEY, array(self::CACHE_TYPE));
             }
         }
         return $declarationConflicts;
