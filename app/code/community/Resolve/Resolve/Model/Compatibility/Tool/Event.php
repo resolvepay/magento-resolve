@@ -77,7 +77,7 @@ class Resolve_Resolve_Model_Compatibility_Tool_Event
     {
         $cache = Mage::app()->loadCache(self::CACHE_KEY);
         if ($this->useCache() && $cache) {
-            $declarationConflicts = Mage::helper('core/unserializeArray')->unserialize($cache);
+            $declarationConflicts = json_decode($cache, true);
         } else {
             $declarationConflicts = array();
             $modules = (array)Mage::getConfig()->getNode('modules')->children();
@@ -92,7 +92,7 @@ class Resolve_Resolve_Model_Compatibility_Tool_Event
                 }
             }
             if ($this->useCache()) {
-                Mage::app()->saveCache(serialize($declarationConflicts), self::CACHE_KEY, array(self::CACHE_TYPE));
+                Mage::app()->saveCache(json_encode($declarationConflicts), self::CACHE_KEY, array(self::CACHE_TYPE));
             }
         }
         return $declarationConflicts;

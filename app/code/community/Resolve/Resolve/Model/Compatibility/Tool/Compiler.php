@@ -77,7 +77,7 @@ class Resolve_Resolve_Model_Compatibility_Tool_Compiler extends Resolve_Resolve_
     {
         $cache = Mage::app()->loadCache(self::CACHE_KEY);
         if ($this->useCache() && $cache) {
-            $controllersCompilerProblems = Mage::helper('core/unserializeArray')->unserialize($cache);
+            $controllersCompilerProblems = json_decode($cache, true);
         } else {
             $modulesPath = Mage::getBaseDir('code');
             $controllers = array();
@@ -107,7 +107,8 @@ class Resolve_Resolve_Model_Compatibility_Tool_Compiler extends Resolve_Resolve_
                 }
             }
             if ($this->useCache()) {
-                Mage::app()->saveCache(serialize($controllersCompilerProblems),
+
+                Mage::app()->saveCache(json_encode($controllersCompilerProblems),
                     self::CACHE_KEY, array(self::CACHE_TYPE)
                 );
             }

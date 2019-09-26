@@ -44,7 +44,7 @@ class Resolve_Resolve_Model_Order_Observer_AfterSaveOrder
         $response = $observer->getControllerAction()->getResponse();
         $session = Mage::helper('resolve')->getCheckoutSession();
         $serializedRequest = $session->getResolveOrderRequest();
-        $proxyRequest = Mage::helper('core/unserializeArray')->unserialize($serializedRequest);
+        $proxyRequest = json_decode($serializedRequest, true);
         $checkoutToken = Mage::registry('resolve_token_code');
         $lastOrderId = $session->getLastOrderId();
         //Return, if order was placed before confirmation
